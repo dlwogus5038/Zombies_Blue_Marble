@@ -1,0 +1,1318 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>dazuoye</title>
+    <style>
+        body {
+            overflow-y: hidden;
+            background: black;
+            user-select: none;
+        }
+
+        #center {
+            position: absolute;
+            width: 1400px;
+            height: 600px;
+            left: 50%;
+            top: 50%;
+            margin: -300px 0 0 -700px;
+        }
+
+        #background {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 5;
+        }
+
+        #dialog_top {
+            position: absolute;
+            top: -99px;
+            left: -56px;
+            z-index: 3;
+        }
+
+        #dialog_bottom {
+            position: absolute;
+            top: 600px;
+            left: -56px;
+            z-index: 3;
+        }
+
+        #dialog_left {
+            position: absolute;
+            top: 0px;
+            left: -55px;
+            z-index: 1;
+        }
+
+        #dialog_right {
+            position: absolute;
+            top: 0px;
+            left: 1347px;
+            z-index: 1;
+        }
+
+        #character1 {
+            position: absolute;
+            z-index: 7;
+        }
+
+        #diceButton {
+            position: absolute;
+            top: 1300px;
+            left: 580px;
+            z-index: 9;
+        }
+
+        #mydice {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 9;
+        }
+
+        #crater {
+            position: absolute;
+            left: 572px;
+            top: 330px;
+            z-index: 5;
+        }
+
+        #img1 {
+            position: absolute;
+            left: 250px;
+            top: 440px;
+            z-index: 7;
+        }
+
+        #img2 {
+            position: absolute;
+            left: 210px;
+            top: 420px;
+            z-index: 7;
+        }
+
+        #usertest {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 5;
+        }
+
+        #usermoney {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 5;
+        }
+
+        #buyBox {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 1;
+        }
+
+        #chomperBox {
+            position: absolute;
+            z-index: 11;
+        }
+
+        #peaBox {
+            position: absolute;
+            z-index: 11;
+        }
+
+        #snowBox {
+            position: absolute;
+            z-index: 11;
+        }
+
+        #buyYes {
+            position: absolute;
+            z-index: 1;
+        }
+
+        #buyNo {
+            position: absolute;
+            z-index: 1;
+        }
+
+        #airplane {
+            position: absolute;
+            z-index: 5;
+            left: 880px;
+            top: 20px;
+        }
+
+        #gamble1 {
+            position: absolute;
+            z-index: 5;
+            left: 240px;
+            top: 380px;
+            width: 90px;
+            height: 90px;
+        }
+
+        #gamble2 {
+            position: absolute;
+            z-index: 5;
+            left: 900px;
+            top: 180px;
+            width: 90px;
+            height: 90px;
+        }
+
+        #blackhole {
+            position: absolute;
+            z-index: 5;
+            left: 260px;
+            top: 40px;
+            width: 70px;
+            height: 90px;
+        }
+
+        #cleanerCanvas {
+            position: absolute;
+            z-index: 1;
+            left: 0px;
+            top: 0px;
+        }
+
+        #angel {
+            position: absolute;
+            z-index: 5;
+            left: 903px;
+            top: 480px;
+            width: 90px;
+            height: 90px;
+        }
+
+        #curPlayer {
+            position: absolute;
+            z-index: 7;
+            left: 1130px;
+            top: 80px;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="center">
+        <img id="dialog_left" src="resource/images/dialog_left.png" />
+        <img id="dialog_right" src="resource/images/dialog_right.png" />
+        <img id="dialog_top" src="resource/images/dialog_top.png" />
+        <img id="dialog_bottom" src="resource/images/dialog_bottom.png" />
+        <img id="background" src="resource/images/background1.jpg" />
+        <img id="crater" src="resource/images/crater1.png" />
+        <img id="airplane" src="resource/images/airplane.png" />
+        <img id="gamble1" src="resource/images/gamble.png" />
+        <img id="gamble2" src="resource/images/gamble.png" />
+        <img id="blackhole" src="resource/images/blackhole.png" />
+        <img id="angel" src="resource/images/angel.png" />
+        <img id="img1" src="resource/images/ZomStopRight.gif"></img>
+        <img id="img2" src="resource/images/NewsStopRight.gif"></img>
+        <img id="curPlayer" src="resource/images/curPlayer.png"></img>
+        <img id="character1" />
+        <img id="chomperBox" />
+        <img id="snowBox" />
+        <img id="peaBox" />
+        <img id="plant3" />
+        <img id="plant4" />
+        <img id="plant7" />
+        <img id="plant8" />
+        <img id="plant9" />
+        <img id="plant10" />
+        <img id="plant11" />
+        <img id="plant12" />
+        <img id="plant15" />
+        <img id="plant16" />
+        <img id="plant19" />
+        <img id="plant20" />
+        <img id="plant21" />
+        <img id="plant22" />
+        <img id="plant23" />
+        <img id="plant24" />
+        <canvas id="mydice"></canvas>
+        <canvas id="usertest"></canvas>
+        <canvas id="usermoney"></canvas>
+        <canvas id="buyBox"></canvas>
+        <canvas id="cleanerCanvas"></canvas>
+        <input type="button" id="diceButton" style="background:url(resource/images/mydice.png) no-repeat;
+        width:70px;height:70px;border:none;outline:none;" onclick="clickDice()">
+        <input type="button" id="buyYes" style="background:url(resource/images/button_yes.png) no-repeat;
+        width:100px;height:40px;border:none;outline:none;" onclick="Buy()">
+        <input type="button" id="buyNo" style="background:url(resource/images/button_no.png) no-repeat;
+        width:100px;height:40px;border:none;outline:none;" onclick="cancelBuy()">
+        <input type="button" id="tourButton2" value="2" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:250px;top:370px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton3" value="3" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:250px;top:270px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton4" value="4" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:250px;top:170px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton6" value="6" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:330px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton7" value="7" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:410px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton8" value="8" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:490px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton9" value="9" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:570px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton10" value="10" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:650px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton11" value="11" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:730px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton12" value="12" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:810px;top:70px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton14" value="14" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:890px;top:170px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton15" value="15" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:890px;top:270px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton16" value="16" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:890px;top:370px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton18" value="18" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:810px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton19" value="19" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:730px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton20" value="20" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:650px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton21" value="21" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:570px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton22" value="22" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:490px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton23" value="23" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:410px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+        <input type="button" id="tourButton24" value="24" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:330px;top:470px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
+    </div>
+
+    <script>
+        var character1 = document.getElementById("character1");
+        var diceButton = document.getElementById("diceButton");
+        var buyYesButton = document.getElementById("buyYes");
+        var buyNoButton = document.getElementById("buyNo");
+        var mydice = document.getElementById("mydice");
+        var userCanvas = document.getElementById("usertest");
+        var moneyCanvas = document.getElementById("usermoney");
+        var buyBoxCanvas = document.getElementById("buyBox");
+        var chomperImg = document.getElementById("chomperBox");
+        var snowImg = document.getElementById("snowBox");
+        var peaImg = document.getElementById("peaBox");
+        var cleanerCanvas = document.getElementById("cleanerCanvas");
+        var diceContext = mydice.getContext("2d");
+        var buyBoxContext = buyBoxCanvas.getContext("2d");
+        var userContext = userCanvas.getContext("2d");
+        var cleanerContext = cleanerCanvas.getContext("2d");
+        var diceImage = null;
+        var sixDice = new Array(6);
+        var diceNumber = null;
+        var diceClicked = false;
+        var buyBoxImage = null;
+        var cleanerImage = null;
+        var fogImage = null;
+
+        var player_pop = 2;
+        var player_surv = player_pop;
+        var players = [];
+        var places = [];
+        var text;
+        var m_speed = 0.5;
+        players.push(1);
+        places.push(1);
+        var check = 0;
+        var img1 = null;
+        var img2 = null;
+        var img3 = null;
+        var img4 = null;
+        var imgboard = null;
+        var brainImg = null;
+        var result_dice = null;
+        var place_to_go;
+        var box_type;
+        var p_price = [];
+        p_price.push(-1);
+        p_price.push(100);
+        p_price.push(200);
+        p_price.push(400);
+        var player_status = 0;
+        var Headimgs = [];
+        for (var i = 0; i <= 24; i++) {
+            var Headimg = new Image();
+            Headimgs.push(Headimg);
+        }
+        var curPlayerNum = 1;
+        var curPlace = null;
+        var curTourButtonNum = null;
+        var is_gamble = false;
+        var is_destroy = false;
+        myReady();
+        downDice(577, -179, 0);
+        var moving = null;
+
+        function player(type, id) {
+            this.id = id;
+            this.img_id = type;
+            this.x_pos = 0;
+            this.y_pos = 0;
+            this.at = 1;
+            this.money = 20000;
+            this.guard = 0;
+            this.is_guard = 0;
+            this.is_imprisoned = 0;
+            this.walk = 0;
+        }
+
+        function place(id) {
+            this.id = id;
+            this.type = -1;
+            this.owner = 0;
+            this.x_pos = 240;
+            this.y_pos = 600;
+            this.status = -1;
+            this.go_where = 1;
+            this.price = 0;
+            this.to_go = 0;
+        }
+
+        function myReady() {
+            character1.width = 84;
+            character1.height = 72
+            character1.src = "resource/images/Zombie2.gif";
+
+            mydice.width = 1400;
+            mydice.height = 600;
+
+            moneyCanvas.width = 1400;
+            moneyCanvas.height = 600;
+
+            buyBoxCanvas.width = 1400;
+            buyBoxCanvas.height = 600;
+
+            cleanerCanvas.width = 1400;
+            cleanerCanvas.height = 600;
+
+            diceImage = new Image();
+            diceContext.drawImage(diceImage, 577, -179);
+            diceImage.src = "resource/images/mydice.png";
+
+            diceContext.font = "40px Arial";
+            diceContext.fillStyle = "rgba(255,255,255,1)";
+
+            buyBoxImage = new Image();
+            buyBoxImage.src = "resource/images/buybox.jpg";
+
+            chomperImg.width = 60;
+            chomperImg.height = 60;
+            chomperImg.style.left = "-500px";
+            chomperImg.src = "resource/images/Chomper.gif";
+
+            snowImg.width = 60;
+            snowImg.height = 60;
+            snowImg.style.left = "-500px";
+            snowImg.src = "resource/images/SnowPea.gif";
+
+            peaImg.width = 60;
+            peaImg.height = 60;
+            peaImg.style.left = "-500px";
+            peaImg.src = "resource/images/Peashooter.gif";
+
+            userCanvas.width = 1400;
+            userCanvas.height = 600;
+
+            cleanerImage = new Image();
+            cleanerImage.onload = function () {
+                userContext.drawImage(cleanerImage, 335, 60, 70, 57);
+                userContext.drawImage(cleanerImage, 818, 450, 70, 57);
+            }
+            cleanerImage.src = "resource/images/LawnCleaner.png";
+
+            fogImage = new Image();
+            fogImage.onload = function () {
+                userContext.drawImage(fogImage, 240, 80, 110, 57);
+            }
+            fogImage.src = "resource/images/fog3.png";
+
+            imgboard = new Image();
+            imgboard.onload = function () {
+                userContext.drawImage(imgboard, 1075, 20, 280, 350);
+            }
+            imgboard.src = "resource/images/Board.jpg";
+
+            setTimeout(function () {
+                img1 = new Image();
+                img1.onload = function () {
+                    userContext.drawImage(img1, 1100, 80);
+                }
+                img1.src = "resource/images/ZomHead.gif";
+            }, 50);
+
+            setTimeout(function () {
+                img2 = new Image();
+                img2.onload = function () {
+                    userContext.drawImage(img2, 1040, 150);
+                }
+                img2.src = "resource/images/NewsHead.gif";
+            }, 50);
+
+            setTimeout(function () {
+                img3 = new Image();
+                img3.onload = function () {
+                    userContext.drawImage(img3, 1170, 100, 150, 40);
+                }
+                img3.src = "resource/images/Sunback.png";
+            }, 50);
+
+            setTimeout(function () {
+                img4 = new Image();
+                brainImg = new Image();
+                img4.onload = function () {
+                    userContext.drawImage(img4, 1170, 165, 150, 40);
+                }
+                img4.src = "resource/images/Sunback.png";
+                brainImg.onload = function () {
+                    userContext.drawImage(brainImg, 1160, 95, 55, 55);
+                    userContext.drawImage(brainImg, 1160, 160, 55, 55);
+                }
+                brainImg.src = "resource/images/brain.png";
+            }, 50);
+
+
+            user_Init();
+
+            moneyContext = moneyCanvas.getContext("2d");
+            moneyContext.font = '24px arial';
+
+            setTimeout(function () {
+                for (var i = 1; i <= player_pop; i++) {
+                    text = players[i].money;
+                    moneyContext.fillText(text, 1230, 65 * i + 65);
+                }
+            }, 100);
+
+
+            for (var i = 0; i < 6; i++) {
+                sixDice[i] = new Image();
+                sixDice[i].src = "resource/images/dice" + (i + 1) + '_' + (i + 1) + ".png";
+            }
+        }
+
+        function user_Init() {
+            for (var i = 1; i <= player_pop; i++) {
+                var new_player;
+                switch (i) {
+                    case 1:
+                        new_player = new player("img1", i);
+                        new_player.x_pos = 250;
+                        new_player.y_pos = 440;
+                        break;
+                    case 2:
+                        new_player = new player("img2", i);
+                        new_player.x_pos = 210;
+                        new_player.y_pos = 420;
+                        break;
+                    case 3:
+                        new_player = new player("img3", i);
+                        break;
+                    case 4:
+                        new_player = new player("img4", i);
+                        break;
+                }
+                players.push(new_player);
+            }
+
+            for (var i = 1; i <= 24; i++) {
+                var new_place = new place(i);
+                if (i >= 1 && i <= 5) {
+                    new_place.to_go = 100;
+                    new_place.x_pos = 240;
+                    new_place.y_pos = 600 - (i * 100);
+                    new_place.go_where = 1;
+                    if (i == 1) {
+                        new_place.type = 0;
+                        new_place.status = 0;
+                        new_place.price = p_price[0];
+                    }
+                    if (i == 2) {
+                        new_place.type = 0;
+                        new_place.status = 1;
+                        new_place.price = p_price[0];
+                    }
+                    if (i == 3) {
+                        new_place.type = 2;
+                        new_place.status = 0;
+                        new_place.price = p_price[2];
+                    }
+                    if (i == 5) {
+                        new_place.type = 0;
+                        new_place.status = 2;
+                        new_place.price = p_price[0];
+                        new_place.to_go = 80;
+                        new_place.go_where = 2;
+                    }
+                    if (i == 4) {
+                        new_place.type = 3;
+                        new_place.status = 0;
+                        new_place.price = p_price[3];
+                    }
+                }
+                else if (i > 5 && i <= 13) {
+                    new_place.to_go = 80;
+                    new_place.x_pos = 240 + 80 * (i - 5);
+                    new_place.y_pos = 100;
+                    new_place.status = 0;
+                    new_place.go_where = 2;
+                    if (i % 2 == 0) {
+                        new_place.type = 1;
+                        new_place.price = p_price[1];
+                    }
+                    else {
+                        new_place.type = 2;
+                        new_place.price = p_price[2];
+                    }
+                    if (i == 6) {
+                        new_place.type = 0;
+                        new_place.status = 3;
+                        new_place.price = p_price[0];
+                    }
+                    if (i == 13) {
+                        new_place.type = 0;
+                        new_place.status = 4;
+                        new_place.price = p_price[0];
+                        new_place.to_go = 100;
+                        new_place.go_where = 3;
+                    }
+                }
+                else if (i > 13 && i <= 17) {
+                    new_place.to_go = 100;
+                    new_place.x_pos = 880;
+                    new_place.y_pos = 100 + (i - 13) * 100;
+                    new_place.status = 0;
+                    new_place.go_where = 3;
+                    if (i % 2 == 0) {
+                        new_place.type = 3;
+                        new_place.price = p_price[3];
+                    }
+                    else {
+                        new_place.type = 2;
+                        new_place.price = p_price[2];
+                    }
+                    if (i == 14) {
+                        new_place.type = 0;
+                        new_place.status = 1;
+                        new_place.price = p_price[0];
+                    }
+                    if (i == 17) {
+                        new_place.type = 0;
+                        new_place.status = 5;
+                        new_place.price = p_price[0];
+                        new_place.to_go = 80;
+                        new_place.go_where = 4;
+                    }
+                }
+                else {
+                    new_place.to_go = 80;
+                    new_place.x_pos = 880 - 80 * (i - 17);
+                    new_place.y_pos = 500;
+                    new_place.status = 0;
+                    new_place.go_where = 4;
+                    if (i % 2 == 0) {
+                        new_place.type = 1;
+                        new_place.price = p_price[1];
+                    }
+                    else {
+                        new_place.type = 2;
+                        new_place.price = p_price[2];
+                    }
+                    if (i == 18) {
+                        new_place.type = 0;
+                        new_place.status = 3;
+                        new_place.price = p_price[0];
+                    }
+                }
+                places.push(new_place)
+            }
+        }
+
+        function downDice(x, y, t) {
+            diceContext.fillRect(577, 0, 100, 400);
+            diceContext.clearRect(577, 0, 100, 400);
+            y += 4;
+            y -= 0.5 * 10 * (t * t);
+            t -= 0.005;
+            diceContext.drawImage(diceImage, x, y)
+            diceImage.src = "resource/images/mydice.png";
+            if (y < 300) {
+                setTimeout(function () { downDice(x, y, t); }, 10)
+            }
+            else {
+                setTimeout(function () {
+                    diceContext.fillRect(577, 0, 100, 400);
+                    diceContext.clearRect(577, 0, 100, 400);
+                    diceButton.style.left = String(x) + "px";
+                    diceButton.style.top = String(y) + "px";
+                    setTimeout(function () { clickText(0, 1); }, 50);
+                }, 500);
+            }
+        }
+
+        function clickText(num, status) {
+            if (diceClicked == true) {
+                diceContext.clearRect(563, 250, 300, 150);
+                return;
+            }
+            if (status == 0) {
+                num += 0.08;
+            }
+            else {
+                num -= 0.08;
+            }
+
+            diceContext.clearRect(563, 250, 300, 150);
+            diceContext.fillStyle = "rgba(255,255,255," + String(num) + ")";
+            diceContext.fillText("Click!!", 563, 290, 300);
+            if (num > 1 || num < 0) {
+                status++;
+            }
+
+            if (diceClicked == false) {
+                setTimeout(function () { clickText(num, (status % 2)); }, 50);
+            }
+            else {
+                diceContext.clearRect(563, 250, 300, 150);
+            }
+        }
+
+        function clickDice() {
+            diceContext.clearRect(560, 0, 150, 400);
+            diceClicked = true;
+            diceButton.style.left = "580px";
+            diceButton.style.top = "1300px";
+            diceContext.drawImage(sixDice[0], 582, 300);
+            var randNum = 7;
+            setTimeout(function () { rotate(diceContext, 0, 0, 0, 0, randNum); }, 20);
+        }
+
+        function rotate(ctx, num, i, time, dir, randNum) {
+            ctx.clearRect(580, 300, 100, 100);
+            ctx.save();
+            ctx.translate(615, 336);
+            ctx.rotate(num * Math.PI / 180);
+            ctx.translate(-615, -336)
+            if (time % randNum == 0 && time != 0) {
+                i = parseInt(Math.random() * 6);
+                if (i >= 6) {
+                    i -= 6;
+                }
+            }
+            ctx.drawImage(sixDice[i], 582, 300);
+            ctx.restore();
+            if (dir == 0) {
+                time += 1;
+                num += 1 + time;
+                if (num > 1800) {
+                    dir = 1;
+                    if (time % 2 == 1) {
+                        num -= time;
+                    }
+                }
+            }
+            else {
+                time -= 1;
+                num -= 1 + time;
+            }
+            if (time > 0) {
+                setTimeout(function () { rotate(ctx, num, i, time, dir, randNum); }, 20);
+            }
+            else {
+                diceNumber = i + 1;
+                diceClicked = false;
+                result_dice = diceNumber;
+                if (is_gamble == true) {
+                    is_gamble = false;
+                    if (result_dice % 2 == 0) {
+                        players[curPlayerNum].money += 100 * result_dice;
+                    }
+                    else {
+                        players[curPlayerNum].money -= 100 * result_dice;
+                    }
+                    ShowMetheMoney();
+                    NextPlayer();
+                    downDice(577, -179, 0);
+                }
+                else {
+                    //place_to_go = players[curPlayerNum].at + result_dice;
+                    place_to_go = 13;
+                    if (place_to_go > 24) {
+                        place_to_go -= 24;
+                    }
+                    setTimeout(function () {
+                        changeimage(curPlayerNum, 2)
+                        moving = setInterval(function () { move(curPlayerNum); }, 1);
+                    }, 500);
+                }
+            }
+        }
+
+        function move(i) {
+            var j = players[i].at;
+            text = "";
+            if (places[j].to_go == players[i].walk) {
+                if (players[i].at != 24) {
+                    players[i].at += 1;
+                }
+                else {
+                    players[i].at = 1;
+                }
+                players[i].walk = 0;
+                j = players[i].at;
+                if (j == 1 || j == 13) {
+                    changeimage(i, 2);
+                    if (j == 1) {
+                        players[i].money += 200;
+                    }
+                    ShowMetheMoney();
+                }
+            }
+            if (j == place_to_go) {
+                m_speed = 0.5;
+                clearInterval(moving);
+                changeimage(curPlayerNum, 1);
+                curPlace = j;
+                if (places[curPlace].type != 0) {
+                    if (places[j].owner == 0) {
+                        if (players[i].money < places[j].price) {
+                            NextPlayer();
+                            downDice(577, -179, 0);
+                        }
+                        else {
+                            drawBuyBox(i, j, 1);
+                        }
+                    }
+                    else {
+                        if (places[j].owner != i) {
+                            if (players[i].is_guard == 1) {
+                                players[i].is_guard = 0;
+                            }
+                            else {
+                                if (places[j].status == 0) {
+                                    players[i].money -= places[j].price * 1.5;
+                                    players[places[j].owner].money += places[j].price * 1.5;
+                                }
+                                else {
+                                    players[i].money -= places[j].price * 2;
+                                    players[places[j].owner].money += places[j].price * 2;
+                                }
+                            }
+                            ShowMetheMoney();
+                            if (players[i].money > places[j].price) {
+                                drawBuyBox(i, j, 3);
+                            }
+                            else {
+                                NextPlayer();
+                                downDice(577, -179, 0);
+                            }
+                        }
+                        else {
+                            if (places[j].status == 0 && players[i].money > (places[j].price * 1.5)) {
+                                drawBuyBox(i, j, 2)
+                            }
+                            else {
+                                NextPlayer();
+                                downDice(577, -179, 0);
+                            }
+
+                        }
+                    }
+                }
+                else {
+                    if (curPlace == 2 || curPlace == 14) {
+                        is_gamble = true;
+                        downDice(577, -179, 0);
+                    }
+                    else if (curPlace == 13) {
+                        m_speed = 4;
+                        WorldTour();
+                    }
+                    else if (curPlace == 17) {
+                        players[i].guard += 1;
+                        NextPlayer();
+                        downDice(577, -179, 0);
+                    }
+                    else if (curPlace == 5) {
+                        players[i].is_imprisoned = 2;
+                        NextPlayer();
+                        downDice(577, -179, 0);
+                    }
+                    else if (curPlace == 6 || curPlace == 18) {
+                        deletePlace();
+                    }
+                    else {
+                        NextPlayer();
+                        downDice(577, -179, 0);
+                    }
+                }
+            }
+            switch (places[j].go_where) {
+                case 1:
+                    players[i].y_pos -= m_speed;
+                    text += players[i].y_pos;
+                    text += "px";
+                    document.getElementById(players[i].img_id).style.top = text;
+                    break;
+                case 2:
+                    players[i].x_pos += m_speed;
+                    text += players[i].x_pos;
+                    text += "px";
+                    document.getElementById(players[i].img_id).style.left = text;
+                    check += 1;
+                    break;
+                case 3:
+                    players[i].y_pos += m_speed;
+                    text += players[i].y_pos;
+                    text += "px";
+                    document.getElementById(players[i].img_id).style.top = text;
+                    break;
+                case 4:
+                    players[i].x_pos -= m_speed;
+                    text += players[i].x_pos;
+                    text += "px";
+                    document.getElementById(players[i].img_id).style.left = text;
+                    break;
+            }
+            players[i].walk += m_speed;
+        }
+
+        function changeimage(i, type) {
+            if (type == 1) {
+                if (players[i].at >= 1 && players[i].at <= 12) {
+                    switch (i) {
+                        case 1:
+                            document.getElementById(players[i].img_id).src = "resource/images/ZomStopRight.gif";
+                            break;
+                        case 2:
+                            document.getElementById(players[i].img_id).src = "resource/images/NewsStopRight.gif";
+                            break;
+                    }
+                }
+                else {
+                    switch (i) {
+                        case 1:
+                            document.getElementById(players[i].img_id).src = "resource/images/ZomStopLeft.gif";
+                            break;
+                        case 2:
+                            document.getElementById(players[i].img_id).src = "resource/images/NewsStopLeft.gif";
+                            break;
+                    }
+                }
+            }
+            else {
+                if (players[i].at >= 1 && players[i].at <= 12) {
+                    switch (i) {
+                        case 1:
+                            document.getElementById(players[i].img_id).src = "resource/images/ZomWalkRight.gif";
+                            break;
+                        case 2:
+                            document.getElementById(players[i].img_id).src = "resource/images/NewsWalkRight.gif";
+                            break;
+                    }
+                }
+                else {
+                    switch (i) {
+                        case 1:
+                            document.getElementById(players[i].img_id).src = "resource/images/ZomWalkLeft.gif";
+                            break;
+                        case 2:
+                            document.getElementById(players[i].img_id).src = "resource/images/NewsWalkLeft.gif";
+                            break;
+                    }
+                }
+            }
+
+
+        }
+        function arrive(i, j) {
+            if (player_status == 1) {
+                players[i].money -= places[j].price;
+                places[j].owner = i;
+                var userContext = userCanvas.getContext("2d");
+                if (j >= 1 && j <= 12) {
+                    switch (i) {
+                        case 1:
+                            Headimgs[j].src = "resource/images/ZomHeadRight.png";
+                            break;
+                        case 2:
+                            Headimgs[j].src = "resource/images/NewsHeadRight.png";
+                            break;
+                    }
+                    if (j == 3 || j == 4) {
+                        Headimgs[j].onload = function () {
+                            userContext.drawImage(Headimgs[j], places[j].x_pos + 65, places[j].y_pos, 51, 47);
+                        }
+                    }
+                    else {
+                        Headimgs[j].onload = function () {
+                            userContext.drawImage(Headimgs[j], places[j].x_pos + 25, places[j].y_pos + 50, 51, 47);
+                        }
+                    }
+                }
+                else {
+                    switch (i) {
+                        case 1:
+                            Headimgs[j].src = "resource/images/ZomHeadLeft.png";
+                            break;
+                        case 2:
+                            Headimgs[j].src = "resource/images/NewsHeadLeft.png";
+                            break;
+                    }
+                    if (j == 15 || j == 16) {
+                        Headimgs[j].onload = function () {
+                            userContext.drawImage(Headimgs[j], places[j].x_pos, places[j].y_pos, 51, 47);
+                        }
+                    }
+                    else {
+                        Headimgs[j].onload = function () {
+                            userContext.drawImage(Headimgs[j], places[j].x_pos + 35, places[j].y_pos - 50, 51, 47);
+                        }
+                    }
+                }
+                NextPlayer();
+                downDice(577, -179, 0)
+            }
+            else if (player_status == 2) {
+                players[i].money -= places[j].price * 1.5;
+                places[j].price += places[j].price * 1.5;
+                places[j].status = 1;
+                var p_name = "plant" + j;
+                switch (places[j].type) {
+                    case 1:
+                        document.getElementById(p_name).src = "resource/images/Peashooter.gif";
+                        break;
+                    case 2:
+                        document.getElementById(p_name).src = "resource/images/SnowPea.gif";
+                        break;
+                    case 3:
+                        document.getElementById(p_name).src = "resource/images/Chomper.gif";
+                        document.getElementById(p_name).style.width = "70px";
+                        document.getElementById(p_name).style.height = "75px";
+                        break;
+                }
+                document.getElementById(p_name).style.position = "absolute";
+                document.getElementById(p_name).style.zIndex = "6";
+                var p_text = "";
+                var tp_num;
+                switch (places[j].go_where) {
+                    case 1:
+                        tp_num = places[j].x_pos + 95;
+                        p_text = tp_num;
+                        p_text += "px";
+                        console.log(p_text);
+                        document.getElementById(p_name).style.left = p_text;
+                        p_text = places[j].y_pos;
+                        p_text += "px";
+                        document.getElementById(p_name).style.top = p_text;
+                        break;
+                    case 2:
+                        tp_num = places[j].y_pos + 100;
+                        p_text = tp_num;
+                        p_text += "px";
+                        document.getElementById(p_name).style.top = p_text;
+                        p_text = places[j].x_pos + 15;
+                        p_text += "px";
+                        document.getElementById(p_name).style.left = p_text;
+                        break;
+                    case 3:
+                        tp_num = places[j].x_pos - 65;
+                        p_text = tp_num;
+                        p_text += "px";
+                        document.getElementById(p_name).style.left = p_text;
+                        p_text = places[j].y_pos;
+                        p_text += "px";
+                        document.getElementById(p_name).style.top = p_text;
+                        break;
+                    case 4:
+                        tp_num = places[j].y_pos - 100;
+                        p_text = tp_num;
+                        p_text += "px";
+                        document.getElementById(p_name).style.top = p_text;
+                        p_text = places[j].x_pos + 15;
+                        p_text += "px";
+                        document.getElementById(p_name).style.left = p_text;
+                        break;
+                }
+                NextPlayer();
+                downDice(577, -179, 0)
+            }
+            else {
+                players[places[j].owner].money += places[j].price;
+                players[i].money -= places[j].price;
+                places[j].owner = i;
+                var userContext = userCanvas.getContext("2d");
+                if (j > 1 && j < 13) {
+                    if (j == 3 || j == 4) {
+                        userContext.fillRect(places[j].x_pos + 65, places[j].y_pos, 51, 47);
+                        userContext.clearRect(places[j].x_pos + 65, places[j].y_pos, 51, 47);
+                    }
+                    else {
+                        userContext.fillRect(places[j].x_pos + 25, places[j].y_pos + 50, 51, 47);
+                        userContext.clearRect(places[j].x_pos + 25, places[j].y_pos + 50, 51, 47);
+                    }
+                    switch (i) {
+                        case 1:
+                            Headimgs[j].src = "resource/images/ZomHeadRight.png";
+                            break;
+                        case 2:
+                            Headimgs[j].src = "resource/images/NewsHeadRight.png";
+                            break;
+                    }
+                }
+                else {
+
+                    if (j == 15 || j == 16) {
+                        userContext.fillRect(places[j].x_pos, places[j].y_pos, 51, 47);
+                        userContext.clearRect(places[j].x_pos, places[j].y_pos, 51, 47);
+                    }
+                    else {
+                        userContext.fillRect(places[j].x_pos + 35, places[j].y_pos - 50, 51, 47);
+                        userContext.clearRect(places[j].x_pos + 35, places[j].y_pos - 50, 51, 47);
+                    }
+                    switch (i) {
+                        case 1:
+                            Headimgs[j].src = "resource/images/ZomHeadLeft.png";
+                            break;
+                        case 2:
+                            Headimgs[j].src = "resource/images/NewsHeadLeft.png";
+                            break;
+                    }
+                }
+                if (places[j].status == 0 && players[i].money > places[j].price * 1.5) {
+                    setTimeout(function () {
+                        drawBuyBox(i, j, 2)
+                    }, 500);
+                }
+                else {
+                    NextPlayer();
+                    downDice(577, -179, 0)
+                }
+            }
+            ShowMetheMoney();
+        }
+
+
+        function drawBuyBox(i, j, type) {
+            curPlayerNum = i;
+            curPlace = j;
+            player_status = type;
+            buyBoxCanvas.style.zIndex = "10";
+            buyBoxContext.drawImage(buyBoxImage, 410, 150, 400, 300);
+            buyBoxContext.font = "15px Arial";
+            if (places[curPlace].type == 3) {
+                chomperImg.style.left = "582px";
+                chomperImg.style.top = "220px";
+                chomperImg.style.zIndex = "11";
+                buyBoxContext.fillText("价格 : 400", 575, 350);
+                buyBoxContext.fillText("通行费 : 600", 568, 370);
+            }
+            else if (places[curPlace].type == 2) {
+                snowImg.style.left = "582px";
+                snowImg.style.top = "220px";
+                snowImg.style.zIndex = "11";
+                buyBoxContext.fillText("价格 : 200", 575, 350);
+                buyBoxContext.fillText("通行费 : 350", 568, 370);
+            }
+            else if (places[curPlace].type == 1) {
+                peaImg.style.left = "582px";
+                peaImg.style.top = "220px";
+                peaImg.style.zIndex = "11";
+                buyBoxContext.fillText("价格 : 100", 575, 350);
+                buyBoxContext.fillText("通行费 : 150", 568, 370);
+            }
+
+            buyYesButton.style.zIndex = "15";
+            buyYesButton.style.left = "510px";
+            buyYesButton.style.top = "400px";
+
+            buyNoButton.style.zIndex = "15";
+            buyNoButton.style.left = "610px";
+            buyNoButton.style.top = "400px";
+
+        }
+
+        function cancelBuy() {
+            buyNoButton.style.zIndex = "1";
+            buyYesButton.style.zIndex = "1";
+
+            chomperImg.style.zIndex = "1";
+            snowImg.style.zIndex = "1";
+            peaImg.style.zIndex = "1";
+
+            buyBoxContext.clearRect(0, 0, 1400, 600);
+            buyBoxCanvas.style.zIndex = "1";
+            NextPlayer();
+            downDice(577, -179, 0)
+        }
+
+        function Buy() {
+            buyNoButton.style.zIndex = "1";
+            buyYesButton.style.zIndex = "1";
+
+            chomperImg.style.zIndex = "1";
+            snowImg.style.zIndex = "1";
+            peaImg.style.zIndex = "1";
+
+            buyBoxContext.clearRect(0, 0, 1400, 600);
+            buyBoxCanvas.style.zIndex = "1";
+            arrive(curPlayerNum, curPlace);
+        }
+
+        function ShowMetheMoney() {
+            moneyContext.clearRect(1230, 0, 200, 400);
+            for (var k = 1; k <= player_pop; k++) {
+                var m_text = players[k].money;
+                moneyContext.fillText(m_text, 1230, 65 * k + 65);
+            }
+        }
+
+        function WorldTour() {
+            for (var i = 1; i <= 24; i++) {
+                if (i != 1 && i != 5 && i != 13 && i != 17) {
+                    var temp = document.getElementById("tourButton" + String(i));
+                    temp.style.zIndex = "50";
+                    temp.style.background = "url(resource/images/PointerDown.gif) no-repeat center"
+                }
+            }
+        }
+
+        function goTravel(index) {
+
+            if (curPlace == 13) {
+                place_to_go = index;
+                if (place_to_go > 24) {
+                    place_to_go -= 24;
+                }
+
+                for (var i = 1; i <= 24; i++) {
+                    if (i != 1 && i != 5 && i != 13 && i != 17) {
+                        var temp = document.getElementById("tourButton" + String(i));
+                        temp.style.zIndex = "1";
+                    }
+                }
+
+                setTimeout(function () {
+                    changeimage(curPlayerNum, 2)
+                    moving = setInterval(function () { move(curPlayerNum); }, 1);
+                }, 100);
+            }
+
+            else {
+                for (var i = 1; i <= 24; i++) {
+                    if (i != 1 && i != 5 && i != 13 && i != 17 && places[i].owner == curPlayerNum) {
+                        var temp = document.getElementById("tourButton" + String(i));
+                        temp.style.zIndex = "1";
+                    }
+                }
+
+                setTimeout(function () {
+                    cleanerCanvas.style.zIndex = "50";
+                    moveCleaner(index, 0, 0, 0, 0);
+                }, 500);
+            }
+        }
+
+        function NextPlayer() {
+            if (curPlayerNum != player_pop) {
+                curPlayerNum += 1;
+                var temp = 80 + (curPlayerNum - 1) * 65;
+                var t_text = "";
+                t_text += temp;
+                t_text += "px";
+                document.getElementById("curPlayer").style.top = t_text;
+            }
+            else {
+                curPlayerNum = 1;
+                document.getElementById("curPlayer").style.top = "80px";
+            }
+            if (players[curPlayerNum].is_imprisoned > 0) {
+                players[curPlayerNum].is_imprisoned -= 1;
+                NextPlayer();
+            }
+        }
+
+        function curPlayerlose() {
+
+        }
+
+        function deletePlace() {
+            var ownerCheck = 0;
+            for (var i = 1; i <= 24; i++) {
+                if (i != 1 && i != 5 && i != 13 && i != 17 && places[i].owner == curPlayerNum) {
+                    var temp = document.getElementById("tourButton" + String(i));
+                    temp.style.zIndex = "50";
+                    temp.style.background = "url(resource/images/PointerDown.gif) no-repeat center"
+                    ownerCheck++;
+                }
+            }
+            if (ownerCheck == 0) {
+                NextPlayer();
+                downDice(577, -179, 0);
+                return;
+            }
+        }
+
+        function moveCleaner(index, x, y, time, originX) {
+
+            if (index > 1 && index < 5) {
+                if (time == 0) {
+                    x = places[index].x_pos - 15;
+                    y = places[index].y_pos - 5;
+                    originX = x;
+                }
+
+            }
+
+            else if (index > 5 && index < 13) {
+                if (time == 0) {
+                    x = places[index].x_pos - 50;
+                    y = places[index].y_pos + 40;
+                    originX = x;
+                }
+
+            }
+
+            else if (index > 13 && index < 17) {
+                if (time == 0) {
+                    x = places[index].x_pos - 80;
+                    y = places[index].y_pos - 5;
+                    originX = x;
+                }
+
+            }
+
+            else {
+                if (time == 0) {
+                    x = places[index].x_pos - 50;
+                    y = places[index].y_pos - 55;
+                    originX = x;
+                }
+
+            }
+
+            cleanerContext.fillRect(x, y, 70, 57);
+            cleanerContext.clearRect(x, y, 70, 57);
+
+            x++;
+
+            cleanerContext.drawImage(cleanerImage, x, y, 70, 57);
+
+            userContext.fillRect(x + 69, y, 1, 57);
+            userContext.clearRect(x + 69, y, 1, 57);
+
+            time++;
+
+            if (x - originX < 70) {
+                setTimeout(function () { moveCleaner(index, x, y, time, originX); }, 60);
+            }
+            else {
+                cleanerContext.fillRect(x, y, 70, 57);
+                cleanerContext.clearRect(x, y, 70, 57);
+
+                places[index].price = p_price[places[index].type];
+                places[index].owner = 0;
+                places[index].status = 0;
+                var p_text = "plant";
+                p_text += index;
+                document.getElementById(p_text).style.zIndex = "1";
+
+                cleanerCanvas.style.zIndex = "1";
+                NextPlayer();
+                downDice(577, -179, 0);
+            }
+        }
+    </script>
+</body>
+
+</html>
