@@ -260,6 +260,10 @@
         width:100px;height:40px;border:none;outline:none;" onclick="Buy()">
         <input type="button" id="buyNo" style="background:url(resource/images/button_no.png) no-repeat;
         width:100px;height:40px;border:none;outline:none;" onclick="cancelBuy()">
+        <input type="button" id="shieldYes" style="background:url(resource/images/button_no.png) no-repeat;
+        width:100px;height:40px;border:none;outline:none;" onclick="useShield()">
+        <input type="button" id="shieldNo" style="background:url(resource/images/button_no.png) no-repeat;
+        width:100px;height:40px;border:none;outline:none;" onclick="cancelShield()">
         <input type="button" id="tourButton2" value="2" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:250px;top:370px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
         <input type="button" id="tourButton3" value="3" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:250px;top:270px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
         <input type="button" id="tourButton4" value="4" onclick="goTravel(this.value)" style="width:80px;height:100px;border:none;outline:none;left:250px;top:170px;position:absolute;background:rgba(255,255,255,0);color:rgba(255,255,255,0)">
@@ -286,6 +290,8 @@
         var diceButton = document.getElementById("diceButton");
         var buyYesButton = document.getElementById("buyYes");
         var buyNoButton = document.getElementById("buyNo");
+        var shieldYesButton = document.getElementById("shieldYes");
+        var shieldNoButton = document.getElementById("shieldNo");
         var mydice = document.getElementById("mydice");
         var userCanvas = document.getElementById("usertest");
         var moneyCanvas = document.getElementById("usermoney");
@@ -299,12 +305,18 @@
         var userContext = userCanvas.getContext("2d");
         var cleanerContext = cleanerCanvas.getContext("2d");
         var diceImage = null;
+        var topPlaceImage = null;
+        var middlePlaceImage = null;
+        var bottomPlaceImage = null;
         var sixDice = new Array(6);
         var diceNumber = null;
         var diceClicked = false;
         var buyBoxImage = null;
         var cleanerImage = null;
         var fogImage = null;
+        var player1Head = null;
+        var player2Head = null;
+        var shieldImage = null;
 
         var player_pop = 3;
         var player_surv = player_pop;
@@ -401,6 +413,24 @@
 
             buyBoxImage = new Image();
             buyBoxImage.src = "resource/images/buybox.jpg";
+
+            topPlaceImage = new Image();
+            topPlaceImage.src = "resource/images/top_place.jpg";
+
+            middlePlaceImage = new Image();
+            middlePlaceImage.src = "resource/images/middle_place.jpg";
+
+            bottomPlaceImage = new Image();
+            bottomPlaceImage.src = "resource/images/bottom_place.jpg";
+
+            player1Head = new Image();
+            player1Head.src = "resource/images/ZomHeadRight.png";
+
+            player2Head = new Image();
+            player2Head.src = "resource/images/NewsHeadRight.png";
+
+            shieldImage = new Image();
+            shieldImage.src = "resource/images/angel.png";
 
             chomperImg.width = 60;
             chomperImg.height = 60;
@@ -926,6 +956,7 @@
                 }
             }
         }
+
         function arrive(i, j) {
             var m_text = "resource/images/";
             m_text += i;
@@ -1079,26 +1110,84 @@
             buyBoxCanvas.style.zIndex = "10";
             buyBoxContext.drawImage(buyBoxImage, 410, 150, 400, 300);
             buyBoxContext.font = "15px Arial";
-            if (places[curPlace].type == 3) {
-                chomperImg.style.left = "582px";
-                chomperImg.style.top = "220px";
-                chomperImg.style.zIndex = "11";
-                buyBoxContext.fillText("价格 : 400", 575, 350);
-                buyBoxContext.fillText("通行费 : 600", 568, 370);
+            if (places[curPlace].owner == curPlayerNum) {
+                if (places[curPlace].type == 3) {
+                    chomperImg.style.left = "582px";
+                    chomperImg.style.top = "220px";
+                    chomperImg.style.zIndex = "11";
+                    buyBoxContext.fillText("价格 : 600", 575, 350);
+                    buyBoxContext.fillText("通行费 : 1400", 568, 370);
+                }
+                else if (places[curPlace].type == 2) {
+                    snowImg.style.left = "582px";
+                    snowImg.style.top = "220px";
+                    snowImg.style.zIndex = "11";
+                    buyBoxContext.fillText("价格 : 300", 575, 350);
+                    buyBoxContext.fillText("通行费 : 650", 568, 370);
+                }
+                else if (places[curPlace].type == 1) {
+                    peaImg.style.left = "582px";
+                    peaImg.style.top = "220px";
+                    peaImg.style.zIndex = "11";
+                    buyBoxContext.fillText("价格 : 150", 575, 350);
+                    buyBoxContext.fillText("通行费 : 350", 568, 370);
+                }
             }
-            else if (places[curPlace].type == 2) {
-                snowImg.style.left = "582px";
-                snowImg.style.top = "220px";
-                snowImg.style.zIndex = "11";
-                buyBoxContext.fillText("价格 : 200", 575, 350);
-                buyBoxContext.fillText("通行费 : 350", 568, 370);
+            else if (places[curPlace].owner == 0) {
+                if (places[curPlace].type == 3) {
+                    buyBoxContext.drawImage(topPlaceImage, 559, 205, 102, 90);
+                    buyBoxContext.fillText("价格 : 400", 575, 350);
+                    buyBoxContext.fillText("通行费 : 600", 568, 370);
+                }
+                else if (places[curPlace].type == 2) {
+                    buyBoxContext.drawImage(middlePlaceImage, 559, 205, 102, 90);
+                    buyBoxContext.fillText("价格 : 200", 575, 350);
+                    buyBoxContext.fillText("通行费 : 350", 568, 370);
+                }
+                else if (places[curPlace].type == 1) {
+                    buyBoxContext.drawImage(bottomPlaceImage, 559, 205, 102, 90);
+                    buyBoxContext.fillText("价格 : 100", 575, 350);
+                    buyBoxContext.fillText("通行费 : 150", 568, 370);
+                }
             }
-            else if (places[curPlace].type == 1) {
-                peaImg.style.left = "582px";
-                peaImg.style.top = "220px";
-                peaImg.style.zIndex = "11";
-                buyBoxContext.fillText("价格 : 100", 575, 350);
-                buyBoxContext.fillText("通行费 : 150", 568, 370);
+            else {
+                if (curPlayerNum == 1) {
+
+                    buyBoxContext.drawImage(player1Head, 582, 220);
+                }
+                else if (curPlayerNum == 2) {
+
+                    buyBoxContext.drawImage(player2Head, 582, 220);
+                }
+
+                if (places[curPlace].status == 0) {
+                    if (places[curPlace].type == 3) {
+                        buyBoxContext.fillText("价格 : 400", 575, 350);
+                        buyBoxContext.fillText("通行费 : 600", 568, 370);
+                    }
+                    else if (places[curPlace].type == 2) {
+                        buyBoxContext.fillText("价格 : 200", 575, 350);
+                        buyBoxContext.fillText("通行费 : 350", 568, 370);
+                    }
+                    else if (places[curPlace].type == 1) {
+                        buyBoxContext.fillText("价格 : 100", 575, 350);
+                        buyBoxContext.fillText("通行费 : 150", 568, 370);
+                    }
+                }
+                else {
+                    if (places[curPlace].type == 3) {
+                        buyBoxContext.fillText("价格 : 1000", 575, 350);
+                        buyBoxContext.fillText("通行费 : 2000", 568, 370);
+                    }
+                    else if (places[curPlace].type == 2) {
+                        buyBoxContext.fillText("价格 : 500", 575, 350);
+                        buyBoxContext.fillText("通行费 : 1000", 568, 370);
+                    }
+                    else if (places[curPlace].type == 1) {
+                        buyBoxContext.fillText("价格 : 250", 575, 350);
+                        buyBoxContext.fillText("通行费 : 500", 568, 370);
+                    }
+                }
             }
 
             buyYesButton.style.zIndex = "15";
@@ -1119,6 +1208,7 @@
             snowImg.style.zIndex = "1";
             peaImg.style.zIndex = "1";
 
+            buyBoxContext.fillRect(0,0,1400,600);
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
             NextPlayer();
@@ -1133,6 +1223,7 @@
             snowImg.style.zIndex = "1";
             peaImg.style.zIndex = "1";
 
+            buyBoxContext.fillRect(0,0,1400,600)
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
             arrive(curPlayerNum, curPlace);
@@ -1302,6 +1393,7 @@
             }
         }
 
+<<<<<<< HEAD
         function setPlayerImage(id) {
             playerImgs[id].onload = function () {
                 userContext.drawImage(playerImgs[id], 1105, 95 + id * 65, 51, 51);
@@ -1335,6 +1427,54 @@
                     downDice(577, -179, 0);
                 }
             }
+=======
+        function useDefenseOrNot(i, j, type) {
+            curPlayerNum = i;
+            curPlace = j;
+            player_status = type;
+
+            buyBoxCanvas.style.zIndex = "10";
+            buyBoxContext.drawImage(buyBoxImage, 410, 150, 400, 300);
+            buyBoxContext.font = "15px Arial";
+
+            buyBoxContext.drawImage(shieldImage, 582, 220, 70, 70);
+
+            buyBoxContext.fillText("使用它,可以不交通行费", 560, 350);
+            buyBoxContext.fillText("你要用它？", 580, 370);
+
+            shieldYesButton.style.zIndex = "15";
+            shieldYesButton.style.left = "510px";
+            shieldYesButton.style.top = "400px";
+
+            shieldNoButton.style.zIndex = "15";
+            shieldNoButton.style.left = "610px";
+            shieldNoButton.style.top = "400px";
+        }
+
+        function useShield() {
+            shieldNoButton.style.zIndex = "1";
+            shieldYesButton.style.zIndex = "1";
+
+            buyBoxContext.fillRect(0, 0, 1400, 600);
+            buyBoxContext.clearRect(0, 0, 1400, 600);
+            buyBoxCanvas.style.zIndex = "1";
+
+            //TO DO
+            //arrive(curPlayerNum, curPlace);
+        }
+
+        function cancelShield() {
+            shieldNoButton.style.zIndex = "1";
+            shieldYesButton.style.zIndex = "1";
+
+            buyBoxContext.fillRect(0, 0, 1400, 600);
+            buyBoxContext.clearRect(0, 0, 1400, 600);
+            buyBoxCanvas.style.zIndex = "1";
+
+            //TO DO
+            //NextPlayer();
+            //downDice(577, -179, 0)
+>>>>>>> 69898683faeb602c9c82048242c5fcae23a36c37
         }
     </script>
 </body>
