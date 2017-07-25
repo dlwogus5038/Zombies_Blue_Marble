@@ -27,6 +27,13 @@
             z-index: 5;
         }
 
+        #dialog_center {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 51;
+        }
+
         #dialog_top {
             position: absolute;
             top: -99px;
@@ -233,11 +240,17 @@
             position: absolute;
             z-index: 1;
         }
+        #startCanvas {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
     </style>
 </head>
 
 <body>
     <div id="center">
+        <img id="dialog_center" src="resource/images/dialog_center.png" />
         <img id="dialog_left" src="resource/images/dialog_left.png" />
         <img id="dialog_right" src="resource/images/dialog_right.png" />
         <img id="dialog_top" src="resource/images/dialog_top.png" />
@@ -280,6 +293,7 @@
         <canvas id="userpurchase"></canvas>
         <canvas id="buyBox"></canvas>
         <canvas id="cleanerCanvas"></canvas>
+        <canvas id="startCanvas"></canvas>
         <input type="button" id="diceButton" style="background:url(resource/images/mydice.png) no-repeat;
         width:70px;height:70px;border:none;outline:none;" onclick="clickDice()">
         <input type="button" id="buyYes" style="background:url(resource/images/button_yes.png) no-repeat;
@@ -328,10 +342,12 @@
         var snowImg = document.getElementById("snowBox");
         var peaImg = document.getElementById("peaBox");
         var cleanerCanvas = document.getElementById("cleanerCanvas");
+        var startCanvas = document.getElementById("startCanvas");
         var diceContext = mydice.getContext("2d");
         var buyBoxContext = buyBoxCanvas.getContext("2d");
         var userContext = userCanvas.getContext("2d");
         var cleanerContext = cleanerCanvas.getContext("2d");
+        var startContext = startCanvas.getContext("2d");
         var diceImage = null;
         var topPlaceImage = null;
         var middlePlaceImage = null;
@@ -347,6 +363,21 @@
         var player3Head = null;
         var player4Head = null;
         var shieldImage = null;
+        var dafuwengImage = null;
+        var jiangshiImage = null;
+
+        var makeDaSound = document.createElement("audio");
+        var makeJiSound = document.createElement("audio");
+        var BGM = document.createElement("audio");
+        var tombstoneSound = document.createElement("audio");
+        var lawnSound = document.createElement("audio");
+        var diceSound = document.createElement("audio");
+        var worldTourSound = document.createElement("audio");
+        var buySound = document.createElement("audio");
+        var buttonSound = document.createElement("audio");
+        var getSound = document.createElement("audio");
+        var moneySound = document.createElement("audio");
+
         var player_pop = 4;
         var players = [];
         var places = [];
@@ -383,13 +414,12 @@
         var curTourButtonNum = null;
         var is_gamble = false;
         var is_destroy = false;
-        myReady();
-        downDice(577, -179, 0);
         var moving = null;
         var shieldmoving = null;
         var moneymoving = null;
         var shieldindex = 430;
         var startmoving = null;
+
         function player(type, id) {
             this.id = id;
             this.img_id = type;
@@ -418,12 +448,146 @@
             this.to_go = 0;
         }
 
+        start();
+
+        function start() {
+            startCanvas.width = 1400;
+            startCanvas.height = 600;
+            startCanvas.style.zIndex = "52";
+
+
+            makeDaSound.src = "resource/audio/finalwave.mp3";
+            makeJiSound.src = "resource/audio/finalwave.mp3";
+            BGM.src = "resource/audio/Mountains.mp3";
+            tombstoneSound.src = "resource/audio/evillaugh.mp3";
+            lawnSound.src = "resource/audio/lawnmower.mp3";
+            diceSound.src = "resource/audio/bowlingimpact2.mp3";
+            worldTourSound.src = "resource/audio/pool_cleaner.mp3";
+            buySound.src = "resource/audio/plant1.mp3";
+            buttonSound.src = "resource/audio/buttonclick.mp3"
+            getSound.src = "resource/audio/points.mp3";
+            moneySound.src = "resource/audio/squash_hmm.mp3";
+            BGM.loop = true;
+
+            dafuwengImage = new Image();
+            dafuwengImage.src = "resource/images/dafuweng.png";
+
+            jiangshiImage = new Image();
+            jiangshiImage.src = "resource/images/jiangshi.png";
+
+            setTimeout(function () { makeDaFuWeng(200, -125, 1000, 750); }, 1000);
+        }
+
+        function makeDaFuWeng(x, y, width, height) {
+            startContext.fillRect(0, 0, 1400, 600);
+            startContext.clearRect(0, 0, 1400, 600);
+
+            startContext.drawImage(dafuwengImage, x, y, width, height);
+
+            x += 2;
+            y += 1;
+            width -= 4;
+            height -= 4;
+
+            if (width > 600) {
+                setTimeout(function () { makeDaFuWeng(x, y, width, height); }, 5);
+            }
+            else {
+                setTimeout(function () { makeJiangShi(390, 100, 600, 400); }, 800);
+
+                makeDaSound.play();
+            }
+        }
+
+        function makeJiangShi(x, y, width, height) {
+            startContext.fillRect(0, 0, 1400, 600);
+            startContext.clearRect(0, 0, 1400, 600);
+
+            startContext.drawImage(dafuwengImage, 400, -25, 600, 350);
+
+            startContext.drawImage(jiangshiImage, x, y, width, height);
+
+            x += 2;
+            y += 1;
+            width -= 4;
+            height -= 4;
+
+            if (width > 300) {
+                setTimeout(function () { makeJiangShi(x, y, width, height); }, 5);
+            }
+            else {
+                setTimeout(function () { makeOptionButton(); }, 1200);
+                makeJiSound.play();
+            }
+        }
+
+        function makeOptionButton() {
+            for (var i = 0; i < 3; i++) {
+                var button = document.createElement("input");
+                document.getElementById("center").appendChild(button);
+                button.type = "button";
+                button.controls = true;
+                button.id = "optionButton" + String(i + 2);
+                button.name = i + 2;
+                button.onclick = function () {
+                    player_pop = this.name;
+                    var buttonClickSound = document.createElement("audio");
+                    buttonClickSound.src = "resource/audio/buttonclick.mp3"
+                    buttonClickSound.play();
+                    setTimeout(function () { startGame(); }, 500);
+                };
+                //button2.style = "background:url(resource/images/OptionsButton.png) no-repeat;width:360px;height:100px;border:none;outline:none;"
+                button.style.zIndex = "55";
+                if (i == 0) {
+                    button.value = "双 人 游 戏";
+                }
+                else if (i == 1) {
+                    button.value = "三 人 游 戏";
+                }
+                else {
+                    button.value = "四 人 游 戏";
+                }
+                button.style.background = "url(resource/images/OptionsButton.png) no-repeat";
+                //button.style.color = "rgba(255,255,255,0)";
+                button.style.width = "360px";
+                button.style.height = "100px"
+                button.style.position = "absolute";
+                button.style.left = "510px";
+                button.style.top = String(290 + i * 100) + "px";
+                button.style.outline = "none";
+                button.style.border = "none";
+                button.style.fontSize = "30px";
+                button.style.fontWeight = 900;
+                button.style.color = "rgb(70,70,70)";
+
+            }
+        }
+
+        function startGame() {
+            makeDaSound.pause();
+            makeJiSound.pause();
+            startCanvas.style.zIndex = "1";
+            var backCanvas = document.getElementById("dialog_center");
+            backCanvas.style.zIndex = "1";
+            for (var j = 0; j < 3; j++) {
+                var startButton = document.getElementById("optionButton" + String(j + 2));
+                startButton.style.zIndex = "1";
+            }
+
+            myReady();
+            downDice(577, -179, 0); //////////////////////////////////
+        }
+
         function myReady() {
             for (var i = 1; i <= player_pop; i++) {
                 var m_text = "img";
                 m_text += i;
                 document.getElementById(m_text).style.zIndex = 7;
             }
+
+
+            BGM.play();
+
             mydice.width = 1400;
             mydice.height = 600;
 
@@ -730,9 +894,7 @@
                 places.push(new_place)
             }
         }
-        function start() {
 
-        }
         function downDice(x, y, t) {
             if (players[curPlayerNum].is_start == 1) {
                 changeimage(curPlayerNum, 2);
@@ -791,6 +953,8 @@
         }
 
         function clickDice() {
+            diceSound.play();
+
             diceContext.clearRect(560, 0, 150, 400);
             diceClicked = true;
             diceButton.style.left = "580px";
@@ -880,6 +1044,7 @@
                         players[i].money += 200;
                         var purchase_give = i;
                         purchase(purchase_give, 0, 1, 200, 0);
+                        moneySound.play();
                     }
                     if (i == 3) {
                         var m_text = "";
@@ -925,11 +1090,13 @@
                                     players[i].money -= places[j].price * 1.5;
                                     players[places[j].owner].money += places[j].price * 1.5;
                                     purchase(purchase_give, purchase_get, 1, places[j].price * 1.5, 0);
+                                    moneySound.play();
                                 }
                                 else {
                                     players[i].money -= places[j].price * 2;
                                     players[places[j].owner].money += places[j].price * 2;
                                     purchase(purchase_give, purchase_get, 1, places[j].price * 2, 0);
+                                    moneySound.play();
                                 }
                             }
                             ShowMetheMoney();
@@ -963,10 +1130,12 @@
                         WorldTour();
                     }
                     else if (curPlace == 17) {
+                        getSound.play();
                         shieldmoving = setInterval(function () { getguard(); }, 1);
                     }
                     else if (curPlace == 5) {
                         players[i].is_imprisoned = 2;
+                        tombstoneSound.play();
                         NextPlayer();
                         downDice(577, -179, 0);
                     }
@@ -1300,6 +1469,9 @@
             buyBoxContext.fillRect(0, 0, 1400, 600);
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
+
+            buttonSound.play();
+
             NextPlayer();
             downDice(577, -179, 0)
         }
@@ -1315,6 +1487,10 @@
             buyBoxContext.fillRect(0, 0, 1400, 600)
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
+
+            buySound.play();
+            moneySound.play();
+
             arrive(curPlayerNum, curPlace);
         }
 
@@ -1351,6 +1527,7 @@
                     }
                 }
 
+                worldTourSound.play();
                 setTimeout(function () {
                     changeimage(curPlayerNum, 2)
                     moving = setInterval(function () { move(curPlayerNum); }, 1);
@@ -1367,6 +1544,7 @@
 
                 setTimeout(function () {
                     cleanerCanvas.style.zIndex = "50";
+                    lawnSound.play();
                     moveCleaner(index, 0, 0, 0, 0);
                 }, 500);
             }
@@ -1563,9 +1741,15 @@
                 NextPlayer();
                 downDice(577, -179, 0);
             }
+
+            buttonSound.play();
+
+            //TO DO
+            //arrive(curPlayerNum, curPlace);
         }
 
         function cancelShield() {
+            buttonSound.play();
             shieldNoButton.style.zIndex = "1";
             shieldYesButton.style.zIndex = "1";
 
@@ -1652,6 +1836,11 @@
             setTimeout(function (){
                 purchase(give_id, get_id, type, value, moneyindex + 0.5)
             },10);
+
+
+            //TO DO
+            //NextPlayer();
+            //downDice(577, -179, 0)
         }
     </script>
 </body>
