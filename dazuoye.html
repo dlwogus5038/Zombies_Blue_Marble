@@ -55,11 +55,6 @@
             z-index: 1;
         }
 
-        #character1 {
-            position: absolute;
-            z-index: 7;
-        }
-
         #diceButton {
             position: absolute;
             top: 1300px;
@@ -83,17 +78,32 @@
 
         #img1 {
             position: absolute;
-            left: 250px;
-            top: 440px;
-            z-index: 7;
+            left: 160px;
+            top: 430px;
+            z-index: 1;
         }
 
         #img2 {
             position: absolute;
-            left: 210px;
-            top: 420px;
-            z-index: 7;
+            left: 120px;
+            top: 340px;
+            z-index: 1;
         }
+
+        #img3 {
+            position: absolute;
+            left: 180px;
+            top: 310px;
+            z-index: 1;
+        }
+
+        #img4 {
+            position: absolute;
+            left: 175px;
+            top: 260px;
+            z-index: 1;
+        }
+
 
         #usertest {
             position: absolute;
@@ -215,10 +225,11 @@
         <img id="gamble2" src="resource/images/gamble.png" />
         <img id="blackhole" src="resource/images/blackhole.png" />
         <img id="angel" src="resource/images/angel.png" />
-        <img id="img1" src="resource/images/ZomStopRight.gif"></img>
-        <img id="img2" src="resource/images/NewsStopRight.gif"></img>
+        <img id="img4" src="resource/images/4StopRight.gif"></img>
+        <img id="img3" src="resource/images/3StopRight.gif"></img>
+        <img id="img2" src="resource/images/2StopRight.gif"></img>
+        <img id="img1" src="resource/images/1StopRight.gif"></img>
         <img id="curPlayer" src="resource/images/curPlayer.png"></img>
-        <img id="character1" />
         <img id="chomperBox" />
         <img id="snowBox" />
         <img id="peaBox" />
@@ -272,7 +283,6 @@
     </div>
 
     <script>
-        var character1 = document.getElementById("character1");
         var diceButton = document.getElementById("diceButton");
         var buyYesButton = document.getElementById("buyYes");
         var buyNoButton = document.getElementById("buyNo");
@@ -296,7 +306,7 @@
         var cleanerImage = null;
         var fogImage = null;
 
-        var player_pop = 2;
+        var player_pop = 3;
         var player_surv = player_pop;
         var players = [];
         var places = [];
@@ -304,11 +314,7 @@
         var m_speed = 0.5;
         players.push(1);
         places.push(1);
-        var check = 0;
-        var img1 = null;
-        var img2 = null;
-        var img3 = null;
-        var img4 = null;
+        var sunImg = null;
         var imgboard = null;
         var brainImg = null;
         var result_dice = null;
@@ -321,9 +327,15 @@
         p_price.push(400);
         var player_status = 0;
         var Headimgs = [];
+        var scoreimgs = [];
         for (var i = 0; i <= 24; i++) {
             var Headimg = new Image();
             Headimgs.push(Headimg);
+        }
+        var playerImgs = [];
+        for (var i = 0; i < player_pop; i++) {
+            var tmpimg = new Image();
+            playerImgs.push(tmpimg);
         }
         var curPlayerNum = 1;
         var curPlace = null;
@@ -333,13 +345,16 @@
         myReady();
         downDice(577, -179, 0);
         var moving = null;
-
+        var startmoving = null;
         function player(type, id) {
             this.id = id;
             this.img_id = type;
             this.x_pos = 0;
+            this.start_x_pos = 0;
             this.y_pos = 0;
+            this.start_y_pos = 0;
             this.at = 1;
+            this.is_start = 1;
             this.money = 20000;
             this.guard = 0;
             this.is_guard = 0;
@@ -360,10 +375,11 @@
         }
 
         function myReady() {
-            character1.width = 84;
-            character1.height = 72
-            character1.src = "resource/images/Zombie2.gif";
-
+            for (var i = 1; i <= player_pop; i++) {
+                var m_text = "img";
+                m_text += i;
+                document.getElementById(m_text).style.zIndex = 7;
+            }
             mydice.width = 1400;
             mydice.height = 600;
 
@@ -424,43 +440,30 @@
             imgboard.src = "resource/images/Board.jpg";
 
             setTimeout(function () {
-                img1 = new Image();
-                img1.onload = function () {
-                    userContext.drawImage(img1, 1100, 80);
+                sunImg = new Image();
+                sunImg.onload = function () {
+                    for (var i = 0; i < player_pop; i++) {
+                        userContext.drawImage(sunImg, 1170, 100 + i * 65, 150, 40);
+                    }
                 }
-                img1.src = "resource/images/ZomHead.gif";
+                sunImg.src = "resource/images/Sunback.png";
             }, 50);
 
             setTimeout(function () {
-                img2 = new Image();
-                img2.onload = function () {
-                    userContext.drawImage(img2, 1040, 150);
-                }
-                img2.src = "resource/images/NewsHead.gif";
-            }, 50);
-
-            setTimeout(function () {
-                img3 = new Image();
-                img3.onload = function () {
-                    userContext.drawImage(img3, 1170, 100, 150, 40);
-                }
-                img3.src = "resource/images/Sunback.png";
-            }, 50);
-
-            setTimeout(function () {
-                img4 = new Image();
                 brainImg = new Image();
-                img4.onload = function () {
-                    userContext.drawImage(img4, 1170, 165, 150, 40);
-                }
-                img4.src = "resource/images/Sunback.png";
                 brainImg.onload = function () {
-                    userContext.drawImage(brainImg, 1160, 95, 55, 55);
-                    userContext.drawImage(brainImg, 1160, 160, 55, 55);
+                    for (var i = 0; i < player_pop; i++) {
+                        userContext.drawImage(brainImg, 1160, 95 + i * 65, 55, 55);
+                    }
                 }
                 brainImg.src = "resource/images/brain.png";
-            }, 50);
+            }, 60);
 
+            setTimeout(function () {
+                for (var i = 0; i < player_pop; i++) {
+                    setPlayerImage(i);
+                }
+            }, 50);
 
             user_Init();
 
@@ -488,18 +491,30 @@
                     case 1:
                         new_player = new player("img1", i);
                         new_player.x_pos = 250;
-                        new_player.y_pos = 440;
+                        new_player.start_x_pos = 160;
+                        new_player.y_pos = 430;
+                        new_player.start_y_pos = 430;
                         break;
                     case 2:
                         new_player = new player("img2", i);
-                        new_player.x_pos = 210;
-                        new_player.y_pos = 420;
+                        new_player.x_pos = 200;
+                        new_player.start_x_pos = 120;
+                        new_player.y_pos = 405;
+                        new_player.start_y_pos = 340;
                         break;
                     case 3:
                         new_player = new player("img3", i);
+                        new_player.x_pos = 250;
+                        new_player.start_x_pos = 180;
+                        new_player.y_pos = 435;
+                        new_player.start_y_pos = 310;
                         break;
                     case 4:
                         new_player = new player("img4", i);
+                        new_player.x_pos = 240;
+                        new_player.start_x_pos = 175;
+                        new_player.y_pos = 450;
+                        new_player.start_y_pos = 260;
                         break;
                 }
                 players.push(new_player);
@@ -617,26 +632,36 @@
                 places.push(new_place)
             }
         }
+        function start() {
 
+        }
         function downDice(x, y, t) {
-            diceContext.fillRect(577, 0, 100, 400);
-            diceContext.clearRect(577, 0, 100, 400);
-            y += 4;
-            y -= 0.5 * 10 * (t * t);
-            t -= 0.005;
-            diceContext.drawImage(diceImage, x, y)
-            diceImage.src = "resource/images/mydice.png";
-            if (y < 300) {
-                setTimeout(function () { downDice(x, y, t); }, 10)
+            if (players[curPlayerNum].is_start == 1) {
+                changeimage(curPlayerNum, 2);
+                setTimeout(function () {
+                        startmoving = setInterval(function () { startmove(); }, 1);
+                    }, 500);
             }
             else {
-                setTimeout(function () {
-                    diceContext.fillRect(577, 0, 100, 400);
-                    diceContext.clearRect(577, 0, 100, 400);
-                    diceButton.style.left = String(x) + "px";
-                    diceButton.style.top = String(y) + "px";
-                    setTimeout(function () { clickText(0, 1); }, 50);
-                }, 500);
+                diceContext.fillRect(577, 0, 100, 400);
+                diceContext.clearRect(577, 0, 100, 400);
+                y += 4;
+                y -= 0.5 * 10 * (t * t);
+                t -= 0.005;
+                diceContext.drawImage(diceImage, x, y)
+                diceImage.src = "resource/images/mydice.png";
+                if (y < 300) {
+                    setTimeout(function () { downDice(x, y, t); }, 10)
+                }
+                else {
+                    setTimeout(function () {
+                        diceContext.fillRect(577, 0, 100, 400);
+                        diceContext.clearRect(577, 0, 100, 400);
+                        diceButton.style.left = String(x) + "px";
+                        diceButton.style.top = String(y) + "px";
+                        setTimeout(function () { clickText(0, 1); }, 50);
+                    }, 500);
+                }
             }
         }
 
@@ -711,7 +736,7 @@
             else {
                 diceNumber = i + 1;
                 diceClicked = false;
-                result_dice = diceNumber;
+                result_dice = 12;
                 if (is_gamble == true) {
                     is_gamble = false;
                     if (result_dice % 2 == 0) {
@@ -722,11 +747,10 @@
                     }
                     ShowMetheMoney();
                     NextPlayer();
-                    downDice(577, -179, 0);
+                    setTimeout(function () {downDice(577, -179, 0);}, 1000);
                 }
                 else {
-                    //place_to_go = players[curPlayerNum].at + result_dice;
-                    place_to_go = 13;
+                    place_to_go = players[curPlayerNum].at + result_dice;
                     if (place_to_go > 24) {
                         place_to_go -= 24;
                     }
@@ -751,10 +775,22 @@
                 players[i].walk = 0;
                 j = players[i].at;
                 if (j == 1 || j == 13) {
-                    changeimage(i, 2);
                     if (j == 1) {
                         players[i].money += 200;
                     }
+                    if(i == 3){
+                        var m_text = "";
+                        if(j == 1){
+                            players[i].x_pos += 90;  
+                        }
+                        else{
+                            players[i].x_pos -= 90; 
+                        }
+                        m_text += players[i].x_pos;
+                        m_text += "px";
+                        document.getElementById(players[i].img_id).style.left = m_text;   
+                    }
+                    changeimage(i, 2);
                     ShowMetheMoney();
                 }
             }
@@ -849,7 +885,6 @@
                     text += players[i].x_pos;
                     text += "px";
                     document.getElementById(players[i].img_id).style.left = text;
-                    check += 1;
                     break;
                 case 3:
                     players[i].y_pos += m_speed;
@@ -868,67 +903,39 @@
         }
 
         function changeimage(i, type) {
+            var m_text = "resource/images/";
+            m_text += i;
             if (type == 1) {
                 if (players[i].at >= 1 && players[i].at <= 12) {
-                    switch (i) {
-                        case 1:
-                            document.getElementById(players[i].img_id).src = "resource/images/ZomStopRight.gif";
-                            break;
-                        case 2:
-                            document.getElementById(players[i].img_id).src = "resource/images/NewsStopRight.gif";
-                            break;
-                    }
+                    m_text += "StopRight.gif";
+                    document.getElementById(players[i].img_id).src = m_text;
                 }
                 else {
-                    switch (i) {
-                        case 1:
-                            document.getElementById(players[i].img_id).src = "resource/images/ZomStopLeft.gif";
-                            break;
-                        case 2:
-                            document.getElementById(players[i].img_id).src = "resource/images/NewsStopLeft.gif";
-                            break;
-                    }
+                    m_text += "StopLeft.gif";
+                    document.getElementById(players[i].img_id).src = m_text;
                 }
             }
             else {
                 if (players[i].at >= 1 && players[i].at <= 12) {
-                    switch (i) {
-                        case 1:
-                            document.getElementById(players[i].img_id).src = "resource/images/ZomWalkRight.gif";
-                            break;
-                        case 2:
-                            document.getElementById(players[i].img_id).src = "resource/images/NewsWalkRight.gif";
-                            break;
-                    }
+                    m_text += "WalkRight.gif"
+                    document.getElementById(players[i].img_id).src = m_text;
                 }
                 else {
-                    switch (i) {
-                        case 1:
-                            document.getElementById(players[i].img_id).src = "resource/images/ZomWalkLeft.gif";
-                            break;
-                        case 2:
-                            document.getElementById(players[i].img_id).src = "resource/images/NewsWalkLeft.gif";
-                            break;
-                    }
+                    m_text += "WalkLeft.gif"
+                    document.getElementById(players[i].img_id).src = m_text;
                 }
             }
-
-
         }
         function arrive(i, j) {
+            var m_text = "resource/images/";
+            m_text += i;
             if (player_status == 1) {
                 players[i].money -= places[j].price;
                 places[j].owner = i;
                 var userContext = userCanvas.getContext("2d");
                 if (j >= 1 && j <= 12) {
-                    switch (i) {
-                        case 1:
-                            Headimgs[j].src = "resource/images/ZomHeadRight.png";
-                            break;
-                        case 2:
-                            Headimgs[j].src = "resource/images/NewsHeadRight.png";
-                            break;
-                    }
+                    m_text += "HeadRight.png";
+                    Headimgs[j].src = m_text;
                     if (j == 3 || j == 4) {
                         Headimgs[j].onload = function () {
                             userContext.drawImage(Headimgs[j], places[j].x_pos + 65, places[j].y_pos, 51, 47);
@@ -941,14 +948,8 @@
                     }
                 }
                 else {
-                    switch (i) {
-                        case 1:
-                            Headimgs[j].src = "resource/images/ZomHeadLeft.png";
-                            break;
-                        case 2:
-                            Headimgs[j].src = "resource/images/NewsHeadLeft.png";
-                            break;
-                    }
+                    m_text += "HeadLeft.png";
+                    Headimgs[j].src = m_text;
                     if (j == 15 || j == 16) {
                         Headimgs[j].onload = function () {
                             userContext.drawImage(Headimgs[j], places[j].x_pos, places[j].y_pos, 51, 47);
@@ -1041,14 +1042,8 @@
                         userContext.fillRect(places[j].x_pos + 25, places[j].y_pos + 50, 51, 47);
                         userContext.clearRect(places[j].x_pos + 25, places[j].y_pos + 50, 51, 47);
                     }
-                    switch (i) {
-                        case 1:
-                            Headimgs[j].src = "resource/images/ZomHeadRight.png";
-                            break;
-                        case 2:
-                            Headimgs[j].src = "resource/images/NewsHeadRight.png";
-                            break;
-                    }
+                    m_text += "HeadRight.png";
+                    Headimgs[j].src = m_text;
                 }
                 else {
 
@@ -1060,14 +1055,8 @@
                         userContext.fillRect(places[j].x_pos + 35, places[j].y_pos - 50, 51, 47);
                         userContext.clearRect(places[j].x_pos + 35, places[j].y_pos - 50, 51, 47);
                     }
-                    switch (i) {
-                        case 1:
-                            Headimgs[j].src = "resource/images/ZomHeadLeft.png";
-                            break;
-                        case 2:
-                            Headimgs[j].src = "resource/images/NewsHeadLeft.png";
-                            break;
-                    }
+                    m_text += "HeadLeft.png";
+                    Headimgs[j].src = m_text;
                 }
                 if (places[j].status == 0 && players[i].money > places[j].price * 1.5) {
                     setTimeout(function () {
@@ -1310,6 +1299,41 @@
                 cleanerCanvas.style.zIndex = "1";
                 NextPlayer();
                 downDice(577, -179, 0);
+            }
+        }
+
+        function setPlayerImage(id) {
+            playerImgs[id].onload = function () {
+                userContext.drawImage(playerImgs[id], 1105, 95 + id * 65, 51, 51);
+            }
+            var temp_text = "resource/images/";
+            temp_text += 1 + id;
+            temp_text += "HeadLeft.png";
+            playerImgs[id].src = temp_text;
+        }
+
+        function startmove() {
+            var m_text = "";
+            if(players[curPlayerNum].y_pos != players[curPlayerNum].start_y_pos){
+                players[curPlayerNum].start_y_pos += m_speed;
+                console.log(players[curPlayerNum].start_y_pos);
+                m_text += players[curPlayerNum].start_y_pos;
+                m_text += "px";
+                document.getElementById(players[curPlayerNum].img_id).style.top = m_text;
+            }
+            else{
+                if(players[curPlayerNum].x_pos != players[curPlayerNum].start_x_pos){
+                    players[curPlayerNum].start_x_pos += m_speed;
+                    m_text += players[curPlayerNum].start_x_pos;
+                    m_text += "px";
+                    document.getElementById(players[curPlayerNum].img_id).style.left = m_text;
+                }
+                else{
+                    players[curPlayerNum].is_start = 0;
+                    clearInterval(startmoving);
+                    changeimage(curPlayerNum, 1);
+                    downDice(577, -179, 0);
+                }
             }
         }
     </script>
