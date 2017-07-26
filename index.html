@@ -267,6 +267,11 @@
             top: 0px;
             z-index: 0;
         }
+        #tutorialCanvas {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
     </style>
 </head>
 
@@ -319,6 +324,7 @@
         <canvas id="buyBox"></canvas>
         <canvas id="cleanerCanvas"></canvas>
         <canvas id="startCanvas"></canvas>
+        <canvas id="tutorialCanvas"></canvas>
         <input type="button" id="diceButton" style="background:url(resource/images/mydice.png) no-repeat;
         width:70px;height:70px;border:none;outline:none;" onclick="clickDice()">
         <input type="button" id="buyYes" style="background:url(resource/images/button_yes.png) no-repeat;
@@ -369,11 +375,13 @@
         var peaImg = document.getElementById("peaBox");
         var cleanerCanvas = document.getElementById("cleanerCanvas");
         var startCanvas = document.getElementById("startCanvas");
+        var tutorialCanvas = document.getElementById("tutorialCanvas");
         var diceContext = mydice.getContext("2d");
         var buyBoxContext = buyBoxCanvas.getContext("2d");
         var userContext = userCanvas.getContext("2d");
         var cleanerContext = cleanerCanvas.getContext("2d");
         var startContext = startCanvas.getContext("2d");
+        var tutorialContext = tutorialCanvas.getContext("2d");
         var diceImage = null;
         var topPlaceImage = null;
         var middlePlaceImage = null;
@@ -397,6 +405,12 @@
             document.getElementById("center").appendChild(boomImg);
             boomImgs.push(boomImg);
         }
+        var speechBubbleImage = null;
+        var tutorialImage = null;
+        var daveComeImage = null;
+        var speechImage = null;
+
+        var speechButton = null;
         var makeDaSound = document.createElement("audio");
         var makeJiSound = document.createElement("audio");
         var BGM = document.createElement("audio");
@@ -408,6 +422,7 @@
         var buttonSound = document.createElement("audio");
         var getSound = document.createElement("audio");
         var moneySound = document.createElement("audio");
+        var daveSoundArray = [];
 
         var player_pop = 4;
         var is_survive = 0;
@@ -454,6 +469,7 @@
         var startmoving = null;
         var is_refund = 0;
         var refund_money = 0;
+        var tutorialNum = 0;
         function player(type, id) {
             this.id = id;
             this.img_id = type;
@@ -503,11 +519,47 @@
             moneySound.src = "resource/audio/squash_hmm.mp3";
             BGM.loop = true;
 
+            for (var j = 0; j < 6; j++) {
+                var daveSound = document.createElement("audio");
+                if (j == 0) {
+                    daveSound.src = "resource/audio/crazydavelong1.mp3";
+                }
+                else if (j == 1) {
+                    daveSound.src = "resource/audio/crazydavelong2.mp3";
+                }
+                else if (j == 2) {
+                    daveSound.src = "resource/audio/crazydavelong3.mp3";
+                }
+                else if (j == 3) {
+                    daveSound.src = "resource/audio/crazydaveshort1.mp3";
+                }
+                else if (j == 4) {
+                    daveSound.src = "resource/audio/crazydaveshort2.mp3";
+                }
+                else if (j == 5) {
+                    daveSound.src = "resource/audio/crazydaveshort3.mp3";
+                }
+                daveSoundArray.push(daveSound);
+            }
+
             dafuwengImage = new Image();
             dafuwengImage.src = "resource/images/dafuweng.png";
 
             jiangshiImage = new Image();
             jiangshiImage.src = "resource/images/jiangshi.png";
+
+            speechBubbleImage = new Image();
+            speechBubbleImage.src = "resource/images/speechBubble.png";
+
+            tutorialImage = document.createElement("img");
+            document.getElementById("center").appendChild(tutorialImage);
+            tutorialImage.style.position = "absolute";
+            tutorialImage.style.width = "32px";
+            tutorialImage.style.height = "40px";
+            tutorialImage.style.left = "0px";
+            tutorialImage.style.top = "95px";
+            tutorialImage.style.zIndex = "1";
+            tutorialImage.src = "resource/images/PointerDown.gif";
 
             setTimeout(function () { makeDaFuWeng(200, -125, 1000, 750); }, 1000);
         }
@@ -572,7 +624,7 @@
                     var buttonClickSound = document.createElement("audio");
                     buttonClickSound.src = "resource/audio/buttonclick.mp3"
                     buttonClickSound.play();
-                    setTimeout(function () { startGame(); }, 500);
+                    setTimeout(function () { startGame(); }, 1000);
                 };
                 button.style.zIndex = "55";
                 if (i == 0) {
@@ -611,8 +663,215 @@
                 startButton.style.zIndex = "1";
             }
 
+            //downDice(577, -179, 0); //////////////////////////////////
+            daveCome();
+            tutorial();
+        }
+
+        function daveCome() {
+            daveComeImage = document.createElement("img");
+            document.getElementById("center").appendChild(daveComeImage);
+            daveComeImage.style.position = "absolute";
+            daveComeImage.style.width = "299px";
+            daveComeImage.style.height = "505px";
+            daveComeImage.style.left = "0px";
+            daveComeImage.style.top = "95px";
+            daveComeImage.style.zIndex = "61";
+            daveComeImage.src = "resource/images/Dave3.gif";
+            //setTimeout(function(){daveComeImage.src = "resource/images/Dave3.gif";},1000);
+            //daveComeImage.src = "resource/images/Dave3.gif";
+        }
+
+        function tutorial() {
+            tutorialCanvas.width = 1400;
+            tutorialCanvas.height = 600;
+            tutorialCanvas.style.zIndex = "62";
+
+            speechImage = document.createElement("img");
+            document.getElementById("center").appendChild(speechImage);
+            speechImage.style.position = "absolute";
+            speechImage.style.width = "310px";
+            speechImage.style.height = "220px";
+            speechImage.style.left = "240px";
+            speechImage.style.top = "145px";
+            speechImage.style.zIndex = "61";
+            speechImage.src = "resource/images/speechBubble.png";
+
+            tutorialContext.font = "bold 20px Tahoma";
+            drawSpeech(0);
+            drawSpeechButton();
             myReady();
-            downDice(577, -179, 0); //////////////////////////////////
+        }
+
+        function drawSpeech(num) {
+            tutorialContext.clearRect(0, 0, 1400, 600);
+
+            if (num != 0) {
+                //daveSoundArray[(num - 1) % 6].pause();
+                //daveSoundArray[num%6].pause();
+            }
+
+
+            if (num == 0) {
+                tutorialContext.fillText("欢迎来到 “大富翁僵尸”", 280, 185);
+                tutorialContext.fillText("我从现在开始告诉你们怎么", 280, 215);
+                tutorialContext.fillText("玩这个游戏", 280, 245);
+            }
+
+            else if (num == 1) {
+                tutorialContext.fillText("这边是开始地点.", 280, 185);
+                tutorialContext.fillText("每个僵尸从这边开始游戏", 280, 215);
+                tutorialContext.fillText("每次通过这边,可以获得", 280, 245);
+                tutorialContext.fillText("200元", 280, 275);
+
+                tutorialImage.style.left = "275px";
+                tutorialImage.style.top = "500px";
+                tutorialImage.style.zIndex = "62";
+            }
+
+            else if (num == 2) {
+                tutorialContext.fillText("这边是筛子区域.", 280, 185);
+                tutorialContext.fillText("游戏开始之后,一个筛子从", 280, 215);
+                tutorialContext.fillText("上面掉到这个地方,然后", 280, 245);
+                tutorialContext.fillText("可以转筛子", 280, 275);
+
+                tutorialImage.style.left = "600px";
+                tutorialImage.style.top = "325px";
+
+            }
+            else if (num == 3) {
+                tutorialContext.fillText("这是草地.", 280, 185);
+                tutorialContext.fillText("是每个用户都能买的地方.", 280, 215);
+                tutorialContext.fillText("如果别的用户已经买了,那么", 280, 245);
+                tutorialContext.fillText("到达之后需要交通行费.", 280, 275);
+
+                tutorialImage.style.left = "600px";
+                tutorialImage.style.top = "90px";
+
+            }
+
+            else if (num == 4) {
+                tutorialContext.fillText("如果用户余额低于通行费,那么", 280, 185);
+                tutorialContext.fillText("需要卖自己的草地和植物.交完", 280, 215);
+                tutorialContext.fillText("之后可以再交钱买当前草地.", 280, 245);
+                tutorialContext.fillText("如果到达用户自己的草地上,", 280, 275);
+            }
+            else if (num == 5) {
+                tutorialContext.fillText("那么可以交钱种一个植物.草地", 280, 185);
+                tutorialContext.fillText("总共有三种,按照颜色来区分.", 280, 215);
+                tutorialContext.fillText("每种草地的价格,通行费,植物", 280, 245);
+                tutorialContext.fillText("种类都不一样.", 280, 275);
+            }
+            else if (num == 6) {
+                tutorialContext.fillText("这是用户状态框.", 280, 185);
+                tutorialContext.fillText("用三个感叹号来表示当前", 280, 215);
+                tutorialContext.fillText("用户,然后显示用户余额和", 280, 245);
+                tutorialContext.fillText("用户所有的盾个数", 280, 275);
+
+                tutorialImage.style.left = "1110px";
+                tutorialImage.style.top = "75px";
+
+            }
+
+            else if (num == 7) {
+                tutorialContext.font = "bold 15px Tahoma"
+                tutorialContext.fillText("这边是赌场.每次到达这个地方以后,", 280, 185);
+                tutorialContext.fillText("要重新转筛子.如果筛子数字是奇数,", 280, 215);
+                tutorialContext.fillText("那么被抢“数字*100”块钱.如果筛子", 280, 245);
+                tutorialContext.fillText("数字是偶数,那么获得“数字*100”元", 280, 275);
+
+                tutorialImage.style.left = "275px";
+                tutorialImage.style.top = "400px";
+
+            }
+            else if (num == 8) {
+                tutorialContext.font = "bold 20px Tahoma"
+                tutorialContext.fillText("这边是坟墓.", 280, 185);
+                tutorialContext.fillText("一旦到达这个地方,用户就", 280, 215);
+                tutorialContext.fillText("会丢失两次转筛子的机会", 280, 245);
+
+                tutorialImage.style.left = "278px";
+                tutorialImage.style.top = "90px";
+
+            }
+            else if (num == 9) {
+
+                tutorialContext.fillText("这是除草机.", 280, 185);
+                tutorialContext.fillText("一旦到达这个地方,用户就", 280, 215);
+                tutorialContext.fillText("要放弃自己买过一个地点.", 280, 245);
+
+                tutorialImage.style.left = "358px";
+                tutorialImage.style.top = "90px";
+
+            }
+
+            else if (num == 10) {
+
+                tutorialContext.fillText("这边是机场.", 280, 185);
+                tutorialContext.fillText("到这边之后,用户可以选择去", 280, 215);
+                tutorialContext.fillText("除4个对角地点以外所有地方", 280, 245);
+
+                tutorialImage.style.left = "918px";
+                tutorialImage.style.top = "90px";
+
+            }
+
+            else if (num == 11) {
+
+                tutorialContext.fillText("这是盾.", 280, 185);
+                tutorialContext.fillText("到这边之后,用户获得一个盾.", 280, 215);
+                tutorialContext.fillText("使用它以后,可以不交一次", 280, 245);
+                tutorialContext.fillText("通行费", 280, 275);
+
+                tutorialImage.style.left = "930px";
+                tutorialImage.style.top = "500px";
+
+            }
+            else if (num == 12) {
+                tutorialContext.fillText("好了,说话太多了", 280, 185);
+                tutorialContext.fillText("现在可以开始游戏了!!", 280, 215);
+
+                tutorialImage.style.zIndex = "1";
+            }
+            else {
+                daveComeImage.src = "resource/images/Dave2.gif";
+                tutorialContext.fillRect(0, 0, 1400, 600);
+                tutorialContext.clearRect(0, 0, 1400, 600);
+                speechBubbleImage.style.zIndex = "1";
+                speechImage.style.zIndex = "1";
+                speechButton.style.zIndex = "1";
+                tutorialCanvas.style.zIndex = "1";
+                setTimeout(function () { downDice(577, -179, 0); daveComeImage.style.zIndex = "1"; }, 1000);
+            }
+            if (num < 13) {
+                daveSoundArray[num % 6].play();
+            }
+        }
+
+        function drawSpeechButton() {
+            speechButton = document.createElement("input");
+            document.getElementById("center").appendChild(speechButton);
+            speechButton.type = "button";
+            speechButton.id = "speechButton"
+            speechButton.onclick = function () {
+                tutorialNum++;
+                drawSpeech(tutorialNum);
+                var buttonClickSound = document.createElement("audio");
+                buttonClickSound.src = "resource/audio/buttonclick.mp3"
+                buttonClickSound.play();
+            };
+
+            speechButton.style.zIndex = "63";
+
+            speechButton.style.background = "url(resource/images/button_right.png) no-repeat center";
+
+            speechButton.style.width = "30px";
+            speechButton.style.height = "30px"
+            speechButton.style.position = "absolute";
+            speechButton.style.left = "505px";
+            speechButton.style.top = "275px";
+            speechButton.style.outline = "none";
+            speechButton.style.border = "none";
         }
 
         function myReady() {
