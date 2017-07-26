@@ -83,6 +83,13 @@
             z-index: 5;
         }
 
+        #win {
+            position: absolute;
+            left: 220px;
+            top: 0px;
+            z-index: 1;
+        }
+
         #img1 {
             position: absolute;
             left: 160px;
@@ -92,8 +99,8 @@
 
         #img2 {
             position: absolute;
-            left: 120px;
-            top: 340px;
+            left: 180px;
+            top: 360px;
             z-index: 1;
         }
 
@@ -124,6 +131,13 @@
             left: 0px;
             top: 0px;
             z-index: 5;
+        }
+
+        #usermask {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 6;
         }
 
         #userguard {
@@ -247,6 +261,12 @@
             top: 0px;
         }
 
+        #bomb {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 0;
+        }
         #tutorialCanvas {
             position: absolute;
             left: 0px;
@@ -293,11 +313,14 @@
         <img id="plant22" />
         <img id="plant23" />
         <img id="plant24" />
+        <img id="bomb" />
+        <img id="win" src="resource/images/WIN.png" />
         <canvas id="mydice"></canvas>
         <canvas id="usertest"></canvas>
         <canvas id="usermoney"></canvas>
         <canvas id="userguard"></canvas>
         <canvas id="userpurchase"></canvas>
+        <canvas id="usermask"></canvas>
         <canvas id="buyBox"></canvas>
         <canvas id="cleanerCanvas"></canvas>
         <canvas id="startCanvas"></canvas>
@@ -343,6 +366,7 @@
         var mydice = document.getElementById("mydice");
         var userCanvas = document.getElementById("usertest");
         var moneyCanvas = document.getElementById("usermoney");
+        var maskCanvas = document.getElementById("usermask");
         var guardCanvas = document.getElementById("userguard");
         var purchaseCanvas = document.getElementById("userpurchase");
         var buyBoxCanvas = document.getElementById("buyBox");
@@ -375,13 +399,18 @@
         var shieldImage = null;
         var dafuwengImage = null;
         var jiangshiImage = null;
+        var boomImgs = [];
+        for(var i =0; i <= 24; i++){
+            var boomImg = document.createElement("img");
+            document.getElementById("center").appendChild(boomImg);
+            boomImgs.push(boomImg);
+        }
         var speechBubbleImage = null;
         var tutorialImage = null;
         var daveComeImage = null;
         var speechImage = null;
 
         var speechButton = null;
-
         var makeDaSound = document.createElement("audio");
         var makeJiSound = document.createElement("audio");
         var BGM = document.createElement("audio");
@@ -396,6 +425,7 @@
         var daveSoundArray = [];
 
         var player_pop = 4;
+        var is_survive = 0;
         var players = [];
         var places = [];
         var text;
@@ -403,6 +433,7 @@
         players.push(1);
         places.push(1);
         var sunImg = null;
+        var deadImg = null;
         var imgboard = null;
         var brainImg = null;
         var shieldImg = null;
@@ -436,8 +467,9 @@
         var moneymoving = null;
         var shieldindex = 430;
         var startmoving = null;
+        var is_refund = 0;
+        var refund_money = 0;
         var tutorialNum = 0;
-
         function player(type, id) {
             this.id = id;
             this.img_id = type;
@@ -447,11 +479,11 @@
             this.start_y_pos = 0;
             this.at = 1;
             this.is_start = 1;
-            this.money = 20000;
-            this.guard = 3;
-            this.is_guard = 0;
+            this.money = 2000;
+            this.guard = 0;
             this.is_imprisoned = 0;
             this.walk = 0;
+            this.is_dead = 0;
         }
 
         function place(id) {
@@ -585,6 +617,7 @@
                 button.name = i + 2;
                 button.onclick = function () {
                     player_pop = this.name;
+                    is_survive = player_pop;
                     document.getElementById("optionButton2").disabled = true;
                     document.getElementById("optionButton3").disabled = true;
                     document.getElementById("optionButton4").disabled = true;
@@ -593,7 +626,6 @@
                     buttonClickSound.play();
                     setTimeout(function () { startGame(); }, 1000);
                 };
-                //button2.style = "background:url(resource/images/OptionsButton.png) no-repeat;width:360px;height:100px;border:none;outline:none;"
                 button.style.zIndex = "55";
                 if (i == 0) {
                     button.value = "双 人 游 戏";
@@ -858,6 +890,9 @@
             moneyCanvas.width = 1400;
             moneyCanvas.height = 600;
 
+            maskCanvas.width = 1400;
+            maskCanvas.height = 600;
+
             guardCanvas.width = 1400;
             guardCanvas.height = 600;
 
@@ -885,6 +920,9 @@
 
             middlePlaceImage = new Image();
             middlePlaceImage.src = "resource/images/middle_place.jpg";
+
+            deadImg = new Image();
+            deadImg.src = "resource/images/dead.png";
 
             bottomPlaceImage = new Image();
             bottomPlaceImage.src = "resource/images/bottom_place.jpg";
@@ -982,6 +1020,8 @@
             moneyContext = moneyCanvas.getContext("2d");
             moneyContext.font = '24px arial';
 
+            maskContext = maskCanvas.getContext("2d");
+
             setTimeout(function () {
                 for (var i = 1; i <= player_pop; i++) {
                     text = players[i].money;
@@ -1023,10 +1063,10 @@
                         break;
                     case 2:
                         new_player = new player("img2", i);
-                        new_player.x_pos = 200;
-                        new_player.start_x_pos = 120;
-                        new_player.y_pos = 405;
-                        new_player.start_y_pos = 340;
+                        new_player.x_pos = 260;
+                        new_player.start_x_pos = 180;
+                        new_player.y_pos = 440;
+                        new_player.start_y_pos = 360;
                         break;
                     case 3:
                         new_player = new player("img3", i);
@@ -1263,6 +1303,7 @@
                 diceNumber = i + 1;
                 diceClicked = false;
                 result_dice = diceNumber;
+                //result_dice = 1;
                 if (is_gamble == true) {
                     is_gamble = false;
                     var purchase_give = curPlayerNum;
@@ -1271,6 +1312,10 @@
                         purchase(purchase_give, 0, 1, 100 * result_dice, 0);
                     }
                     else {
+                        if (players[curPlayerNum].money < 100 * result_dice) {
+                            deletePlace(1, 100 * result_dice);
+                            return;
+                        }
                         players[curPlayerNum].money -= 100 * result_dice;
                         purchase(purchase_give, 0, 2, 100 * result_dice, 0);
                     }
@@ -1280,6 +1325,7 @@
                 }
                 else {
                     place_to_go = players[curPlayerNum].at + result_dice;
+                    //place_to_go = 14;
                     if (place_to_go > 24) {
                         place_to_go -= 24;
                     }
@@ -1351,12 +1397,20 @@
                                 var purchase_give = i;
                                 var purchase_get = places[j].owner;
                                 if (places[j].status == 0) {
+                                    if (players[curPlayerNum].money < places[j].price * 1.5) {
+                                        deletePlace(1, places[j].price * 1.5);
+                                        return;
+                                    }
                                     players[i].money -= places[j].price * 1.5;
                                     players[places[j].owner].money += places[j].price * 1.5;
                                     purchase(purchase_give, purchase_get, 1, places[j].price * 1.5, 0);
                                     moneySound.play();
                                 }
                                 else {
+                                    if (players[curPlayerNum].money < places[j].price * 2) {
+                                        deletePlace(1, places[j].price * 2);
+                                        return;
+                                    }
                                     players[i].money -= places[j].price * 2;
                                     players[places[j].owner].money += places[j].price * 2;
                                     purchase(purchase_give, purchase_get, 1, places[j].price * 2, 0);
@@ -1404,7 +1458,7 @@
                         downDice(577, -179, 0);
                     }
                     else if (curPlace == 6 || curPlace == 18) {
-                        deletePlace();
+                        deletePlace(0, 0);
                     }
                     else {
                         NextPlayer();
@@ -1618,7 +1672,6 @@
             ShowMetheMoney();
         }
 
-
         function drawBuyBox(i, j, type) {
             curPlayerNum = i;
             curPlace = j;
@@ -1831,14 +1884,140 @@
                 players[curPlayerNum].is_imprisoned -= 1;
                 NextPlayer();
             }
+            if (players[curPlayerNum].is_dead == 1) {
+                NextPlayer();
+            }
         }
 
         function curPlayerlose() {
-
+            players[curPlayerNum].money = 0;
+            ShowMetheMoney();
+            var m_text = "";
+            if (curPlayerNum == 3) {
+                m_text += players[curPlayerNum].x_pos - 50 + 90;
+            }
+            else {
+                m_text += players[curPlayerNum].x_pos - 50;
+            }
+            m_text += "px";
+            document.getElementById("bomb").style.left = m_text;
+            m_text = "";
+            m_text += players[curPlayerNum].y_pos - 30;
+            m_text += "px";
+            document.getElementById("bomb").style.top = m_text;
+            document.getElementById("bomb").src = "resource/images/boom.gif"
+            document.getElementById("bomb").style.zIndex = "8";
+            for (var i = 1; i <= 24; i++) {
+                if (places[i].type != 0) {
+                    if (places[i].owner == curPlayerNum) {
+                        switch(places[i].go_where){
+                            case 1:
+                                userContext.fillRect(places[i].x_pos + 65, places[i].y_pos, 51, 47);
+                                userContext.clearRect(places[i].x_pos + 65, places[i].y_pos, 51, 47);
+                                break;
+                            case 2:
+                                userContext.fillRect(places[i].x_pos + 25, places[i].y_pos + 50, 51, 47);
+                                userContext.clearRect(places[i].x_pos + 25, places[i].y_pos + 50, 51, 47);
+                                break;
+                            case 3:
+                                userContext.fillRect(places[i].x_pos, places[i].y_pos, 51, 47);
+                                userContext.clearRect(places[i].x_pos, places[i].y_pos, 51, 47);
+                                break;
+                            case 4:
+                                userContext.fillRect(places[i].x_pos + 35, places[i].y_pos - 50, 51, 47);
+                                userContext.clearRect(places[i].x_pos + 35, places[i].y_pos - 50, 51, 47);
+                                break;
+                        }
+                        boomImgs[i].style.position = "absolute";
+                        m_text = "";
+                        m_text = places[i].x_pos - 70;
+                        m_text += "px";
+                        boomImgs[i].style.left = m_text;
+                        m_text = "";
+                        m_text = places[i].y_pos - 100;
+                        m_text += "px";
+                        boomImgs[i].style.top = m_text;
+                        boomImgs[i].style.zIndex = "10";
+                        boomImgs[i].src = "resource/images/Boom.gif";
+                        places[i].price = p_price[places[i].type];
+                        places[i].owner = 0;
+                        places[i].status = 0;
+                        var p_text = "plant";
+                        p_text += i;
+                        document.getElementById(p_text).style.zIndex = "1";
+                    }
+                }
+            }
+            setTimeout(function () {
+                for(var i = 0; i <= 24; i++){
+                    boomImgs[i].style.zIndex ="1";
+                }
+                document.getElementById("bomb").style.zIndex = "1";
+                boomImg.style.zIndex ="1";
+                if (players[curPlayerNum].at < 13) {
+                    document.getElementById(players[curPlayerNum].img_id).src = "resource/images/PlayerDieRight.gif"
+                }
+                else {
+                    if (curPlayerNum == 3) {
+                        m_text = "";
+                        players[3].x_pos += 90;
+                        m_text += players[3].x_pos;
+                        m_text += "px";
+                        document.getElementById(players[curPlayerNum].img_id).style.left = m_text;
+                        document.getElementById(players[curPlayerNum].img_id).src = "resource/images/PlayerDieLeft.gif"
+                    }
+                    else {
+                        document.getElementById(players[curPlayerNum].img_id).src = "resource/images/PlayerDieLeft.gif"
+                    }
+                }
+            }, 850);
+            setTimeout(function () {
+                document.getElementById(players[curPlayerNum].img_id).style.zIndex = "1";
+                players[curPlayerNum].is_dead = 1;
+                maskContext.drawImage(deadImg, 1100, curPlayerNum * 65 + 15, 51, 51);
+                is_survive -= 1;
+                if (is_survive == 1) {
+                    Win();
+                    return;
+                    console.log("win");
+                }
+                NextPlayer();
+                downDice(577, -179, 0);
+            }, 3700);
         }
 
-        function deletePlace() {
+        function Win() {
+            var winner;
+            for (var i = 1; i <= player_pop; i++) {
+                if (players[i].is_dead == 0) {
+                    winner = i;
+                    break;
+                }
+            }
+            document.getElementById("win").style.zIndex = "20";
+            document.getElementById(players[winner].img_id).style.top = "350px"
+            document.getElementById(players[winner].img_id).style.left = "550px"
+            document.getElementById(players[winner].img_id).style.width = "150px"
+            document.getElementById(players[winner].img_id).style.height = "200px"
+            document.getElementById(players[winner].img_id).style.zIndex = "21"
+        }
+
+        function deletePlace(type, value) {
             var ownerCheck = 0;
+            var totalprice = 0;
+            is_refund = type;
+            refund_money = value;
+            if (is_refund == 1) {
+                for (var i = 1; i <= 24; i++) {
+                    if (i != 1 && i != 5 && i != 13 && i != 17 && places[i].owner == curPlayerNum) {
+                        totalprice += places[i].price;
+                    }
+                }
+            }
+            if (totalprice + players[curPlayerNum].money < value) {
+                curPlayerlose();
+                return;
+            }
             for (var i = 1; i <= 24; i++) {
                 if (i != 1 && i != 5 && i != 13 && i != 17 && places[i].owner == curPlayerNum) {
                     var temp = document.getElementById("tourButton" + String(i));
@@ -1910,15 +2089,31 @@
             else {
                 cleanerContext.fillRect(x, y, 70, 57);
                 cleanerContext.clearRect(x, y, 70, 57);
-
-                places[index].price = p_price[places[index].type];
                 places[index].owner = 0;
                 places[index].status = 0;
                 var p_text = "plant";
                 p_text += index;
                 document.getElementById(p_text).style.zIndex = "1";
-
                 cleanerCanvas.style.zIndex = "1";
+                if (is_refund == 1) {
+                    players[curPlayerNum].money += places[index].price;
+                    purchase(curPlayerNum, 0, 1, places[index].price, 0);
+                    ShowMetheMoney();
+                    var m = curPlayerNum;
+                    var n = curPlace;
+                    if (players[curPlayerNum].money < refund_money) {
+                        deletePlace(1, refund_money);
+                        return;
+                    }
+                    setTimeout(function () {
+                        players[m].money -= refund_money;
+                        players[places[n].owner].money += refund_money;
+                        purchase(m, places[n].owner, 0, refund_money, 0);
+                        ShowMetheMoney();
+                    }, 1500);
+                    is_refund = 0;
+                }
+                places[index].price = p_price[places[index].type];
                 NextPlayer();
                 downDice(577, -179, 0);
             }
@@ -2007,9 +2202,6 @@
             }
 
             buttonSound.play();
-
-            //TO DO
-            //arrive(curPlayerNum, curPlace);
         }
 
         function cancelShield() {
@@ -2025,11 +2217,19 @@
             var purchase_give = i;
             purchase_get = places[j].owner;
             if (places[j].status == 0) {
+                if (players[curPlayerNum].money < places[j].price * 1.5) {
+                    deletePlace(1, places[j].price * 1.5);
+                    return;
+                }
                 players[i].money -= places[j].price * 1.5;
                 players[places[j].owner].money += places[j].price * 1.5;
                 purchase(purchase_give, purchase_get, 1, places[j].price * 1.5, 0);
             }
             else {
+                if (players[curPlayerNum].money < places[j].price * 2) {
+                    deletePlace(1, places[j].price * 2);
+                    return;
+                }
                 players[i].money -= places[j].price * 2;
                 players[places[j].owner].money += places[j].price * 2;
                 purchase(purchase_give, purchase_get, 1, places[j].price * 2, 0);
@@ -2068,7 +2268,6 @@
 
         function purchase(give_id, get_id, type, value, moneyindex) {
             purchaseContext.clearRect(1230, 0, 200, 400);
-            console.log(1);
             if (parseInt(moneyindex) == 30) {
                 return;
             }
@@ -2099,12 +2298,7 @@
             }
             setTimeout(function () {
                 purchase(give_id, get_id, type, value, moneyindex + 0.5)
-            }, 10);
-
-
-            //TO DO
-            //NextPlayer();
-            //downDice(577, -179, 0)
+            }, 20);
         }
     </script>
 </body>
