@@ -393,6 +393,7 @@
         var buttonSound = document.createElement("audio");
         var getSound = document.createElement("audio");
         var moneySound = document.createElement("audio");
+        var daveSoundArray = [];
 
         var player_pop = 4;
         var players = [];
@@ -485,6 +486,29 @@
             getSound.src = "resource/audio/points.mp3";
             moneySound.src = "resource/audio/squash_hmm.mp3";
             BGM.loop = true;
+
+            for (var j = 0; j < 6; j++) {
+                var daveSound = document.createElement("audio");
+                if (j == 0) {
+                    daveSound.src = "resource/audio/crazydavelong1.mp3";
+                }
+                else if (j == 1) {
+                    daveSound.src = "resource/audio/crazydavelong2.mp3";
+                }
+                else if (j == 2) {
+                    daveSound.src = "resource/audio/crazydavelong3.mp3";
+                }
+                else if (j == 3) {
+                    daveSound.src = "resource/audio/crazydaveshort1.mp3";
+                }
+                else if (j == 4) {
+                    daveSound.src = "resource/audio/crazydaveshort2.mp3";
+                }
+                else if (j == 5) {
+                    daveSound.src = "resource/audio/crazydaveshort3.mp3";
+                }
+                daveSoundArray.push(daveSound);
+            }
 
             dafuwengImage = new Image();
             dafuwengImage.src = "resource/images/dafuweng.png";
@@ -650,6 +674,12 @@
         function drawSpeech(num) {
             tutorialContext.clearRect(0, 0, 1400, 600);
 
+            if (num != 0) {
+                daveSoundArray[(num - 1) % 6].pause();
+                daveSoundArray[num%6].pause();
+            }
+
+
             if (num == 0) {
                 tutorialContext.fillText("欢迎来到 “大富翁僵尸”", 280, 185);
                 tutorialContext.fillText("我从现在开始告诉你们怎么", 280, 215);
@@ -675,7 +705,7 @@
 
                 tutorialImage.style.left = "600px";
                 tutorialImage.style.top = "325px";
-                
+
             }
             else if (num == 3) {
                 tutorialContext.fillText("这是草地.", 280, 185);
@@ -687,7 +717,7 @@
                 tutorialImage.style.top = "90px";
 
             }
-            
+
             else if (num == 4) {
                 tutorialContext.fillText("交完之后可以再交钱买当前", 280, 185);
                 tutorialContext.fillText("草地.如果到达用户自己的", 280, 215);
@@ -708,7 +738,7 @@
                 tutorialImage.style.top = "75px";
 
             }
-            
+
             else if (num == 7) {
                 tutorialContext.font = "bold 15px Tahoma"
                 tutorialContext.fillText("这边是赌场.每次到达这个地方以后,", 280, 185);
@@ -763,21 +793,24 @@
                 tutorialImage.style.top = "500px";
 
             }
-            else if(num == 12){
+            else if (num == 12) {
                 tutorialContext.fillText("好了,说话太多了", 280, 185);
                 tutorialContext.fillText("现在可以开始游戏了!!", 280, 215);
-                
+
                 tutorialImage.style.zIndex = "1";
             }
-            else{
+            else {
                 daveComeImage.src = "resource/images/Dave2.gif";
-                tutorialContext.fillRect(0,0,1400,600);
-                tutorialContext.clearRect(0,0,1400,600);
+                tutorialContext.fillRect(0, 0, 1400, 600);
+                tutorialContext.clearRect(0, 0, 1400, 600);
                 speechBubbleImage.style.zIndex = "1";
                 speechImage.style.zIndex = "1";
                 speechButton.style.zIndex = "1";
                 tutorialCanvas.style.zIndex = "1";
-                setTimeout(function(){downDice(577, -179, 0);daveComeImage.style.zIndex = "1";},1000);
+                setTimeout(function () { downDice(577, -179, 0); daveComeImage.style.zIndex = "1"; }, 1000);
+            }
+            if (num < 13) {
+                daveSoundArray[num % 6].play();
             }
         }
 
