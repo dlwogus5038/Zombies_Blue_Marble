@@ -267,7 +267,6 @@
             top: 0px;
             z-index: 0;
         }
-
         #tutorialCanvas {
             position: absolute;
             left: 0px;
@@ -401,7 +400,8 @@
         var dafuwengImage = null;
         var jiangshiImage = null;
         var boomImgs = [];
-        for (var i = 0; i <= 24; i++) {
+
+        for(var i =0; i <= 24; i++){
             var boomImg = document.createElement("img");
             document.getElementById("center").appendChild(boomImg);
             boomImgs.push(boomImg);
@@ -486,7 +486,6 @@
             this.walk = 0;
             this.is_dead = 0;
             this.is_ui = 0;
-        }
 
         function place(id) {
             this.id = id;
@@ -1310,6 +1309,7 @@
                 diceNumber = i + 1;
                 diceClicked = false;
                 result_dice = diceNumber;
+                //result_dice = 1;
                 if (is_gamble == true) {
                     is_gamble = false;
                     var purchase_give = curPlayerNum;
@@ -2289,7 +2289,7 @@
                 NextPlayer();
                 downDice(577, -179, 0);
             }
-        }
+            buttonSound.play();
 
         function cancelShield() {
             buttonSound.play();
