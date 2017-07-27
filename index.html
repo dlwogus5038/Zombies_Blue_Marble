@@ -485,7 +485,7 @@
             this.is_imprisoned = 0;
             this.walk = 0;
             this.is_dead = 0;
-            this.is_ui = 1;
+            this.is_ui = 0;
         }
 
         function place(id) {
@@ -1310,7 +1310,6 @@
                 diceNumber = i + 1;
                 diceClicked = false;
                 result_dice = diceNumber;
-                result_dice = 3;
                 if (is_gamble == true) {
                     is_gamble = false;
                     var purchase_give = curPlayerNum;
