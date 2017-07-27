@@ -161,6 +161,13 @@
             z-index: 1;
         }
 
+        #buyBoxText {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 1;
+        }
+
         #chomperBox {
             position: absolute;
             z-index: 11;
@@ -267,6 +274,7 @@
             top: 0px;
             z-index: 0;
         }
+
         #tutorialCanvas {
             position: absolute;
             left: 0px;
@@ -325,6 +333,7 @@
         <canvas id="cleanerCanvas"></canvas>
         <canvas id="startCanvas"></canvas>
         <canvas id="tutorialCanvas"></canvas>
+        <canvas id="buyBoxText"></canvas>
         <input type="button" id="diceButton" style="background:url(resource/images/mydice.png) no-repeat;
         width:70px;height:70px;border:none;outline:none;" onclick="clickDice()">
         <input type="button" id="buyYes" style="background:url(resource/images/button_yes.png) no-repeat;
@@ -370,6 +379,7 @@
         var guardCanvas = document.getElementById("userguard");
         var purchaseCanvas = document.getElementById("userpurchase");
         var buyBoxCanvas = document.getElementById("buyBox");
+        var buyBoxTextCanvas = document.getElementById("buyBoxText");
         var chomperImg = document.getElementById("chomperBox");
         var snowImg = document.getElementById("snowBox");
         var peaImg = document.getElementById("peaBox");
@@ -378,6 +388,7 @@
         var tutorialCanvas = document.getElementById("tutorialCanvas");
         var diceContext = mydice.getContext("2d");
         var buyBoxContext = buyBoxCanvas.getContext("2d");
+        var buyBoxTextContext = buyBoxTextCanvas.getContext("2d");
         var userContext = userCanvas.getContext("2d");
         var cleanerContext = cleanerCanvas.getContext("2d");
         var startContext = startCanvas.getContext("2d");
@@ -400,7 +411,7 @@
         var dafuwengImage = null;
         var jiangshiImage = null;
         var boomImgs = [];
-        for(var i =0; i <= 24; i++){
+        for (var i = 0; i <= 24; i++) {
             var boomImg = document.createElement("img");
             document.getElementById("center").appendChild(boomImg);
             boomImgs.push(boomImg);
@@ -422,6 +433,8 @@
         var buttonSound = document.createElement("audio");
         var getSound = document.createElement("audio");
         var moneySound = document.createElement("audio");
+        var explosionSound = document.createElement("audio");
+        var winSound = document.createElement("audio");
         var daveSoundArray = [];
 
         var player_pop = 4;
@@ -517,6 +530,8 @@
             buttonSound.src = "resource/audio/buttonclick.mp3"
             getSound.src = "resource/audio/points.mp3";
             moneySound.src = "resource/audio/squash_hmm.mp3";
+            explosionSound.src = "resource/audio/explosion.mp3";
+            winSound.src = "resource/audio/winmusic.mp3";
             BGM.loop = true;
 
             for (var j = 0; j < 6; j++) {
@@ -637,7 +652,6 @@
                     button.value = "四 人 游 戏";
                 }
                 button.style.background = "url(resource/images/OptionsButton.png) no-repeat";
-                //button.style.color = "rgba(255,255,255,0)";
                 button.style.width = "360px";
                 button.style.height = "100px"
                 button.style.position = "absolute";
@@ -662,8 +676,6 @@
                 var startButton = document.getElementById("optionButton" + String(j + 2));
                 startButton.style.zIndex = "1";
             }
-
-            //downDice(577, -179, 0); //////////////////////////////////
             daveCome();
             tutorial();
         }
@@ -678,8 +690,6 @@
             daveComeImage.style.top = "95px";
             daveComeImage.style.zIndex = "61";
             daveComeImage.src = "resource/images/Dave3.gif";
-            //setTimeout(function(){daveComeImage.src = "resource/images/Dave3.gif";},1000);
-            //daveComeImage.src = "resource/images/Dave3.gif";
         }
 
         function tutorial() {
@@ -706,11 +716,6 @@
         function drawSpeech(num) {
             tutorialContext.clearRect(0, 0, 1400, 600);
 
-            if (num != 0) {
-                //daveSoundArray[(num - 1) % 6].pause();
-                //daveSoundArray[num%6].pause();
-            }
-
 
             if (num == 0) {
                 tutorialContext.fillText("欢迎来到 “大富翁僵尸”", 280, 185);
@@ -730,10 +735,10 @@
             }
 
             else if (num == 2) {
-                tutorialContext.fillText("这边是筛子区域.", 280, 185);
+                tutorialContext.fillText("这边是骰子区域.", 280, 185);
                 tutorialContext.fillText("游戏开始之后,一个筛子从", 280, 215);
                 tutorialContext.fillText("上面掉到这个地方,然后", 280, 245);
-                tutorialContext.fillText("可以转筛子", 280, 275);
+                tutorialContext.fillText("可以转骰子", 280, 275);
 
                 tutorialImage.style.left = "600px";
                 tutorialImage.style.top = "325px";
@@ -902,6 +907,9 @@
             buyBoxCanvas.width = 1400;
             buyBoxCanvas.height = 600;
 
+            buyBoxTextCanvas.width = 1400;
+            buyBoxTextCanvas.height = 600;
+
             cleanerCanvas.width = 1400;
             cleanerCanvas.height = 600;
 
@@ -986,7 +994,7 @@
                         userContext.drawImage(sunImg, 1170, 85 + i * 65, 150, 40);
                     }
                 }
-                sunImg.src = "resource/images/Sunback.png";
+                sunImg.src = "resource/images/SunBack.png";
             }, 50);
 
             setTimeout(function () {
@@ -1303,7 +1311,6 @@
                 diceNumber = i + 1;
                 diceClicked = false;
                 result_dice = diceNumber;
-                //result_dice = 1;
                 if (is_gamble == true) {
                     is_gamble = false;
                     var purchase_give = curPlayerNum;
@@ -1325,7 +1332,6 @@
                 }
                 else {
                     place_to_go = players[curPlayerNum].at + result_dice;
-                    //place_to_go = 14;
                     if (place_to_go > 24) {
                         place_to_go -= 24;
                     }
@@ -1677,9 +1683,15 @@
             curPlace = j;
             player_status = type;
             buyBoxCanvas.style.zIndex = "10";
+            buyBoxTextCanvas.style.zIndex = "11";
             buyBoxContext.drawImage(buyBoxImage, 410, 150, 400, 300);
             buyBoxContext.font = "15px Arial";
+            buyBoxTextContext.clearRect(0, 0, 1400, 600);
+            buyBoxTextContext.font = "bold 15px Arial";
+            buyBoxTextContext.fillStyle = "rgb(255,201,14)";
+            buyBoxTextContext.fillText("Buy Item", 582, 180);
             if (places[curPlace].owner == curPlayerNum) {
+                buyBoxTextContext.fillText("Plant", 593, 315);
                 if (places[curPlace].type == 3) {
                     chomperImg.style.left = "582px";
                     chomperImg.style.top = "220px";
@@ -1703,6 +1715,7 @@
                 }
             }
             else if (places[curPlace].owner == 0) {
+                buyBoxTextContext.fillText("Soil", 598, 315);
                 if (places[curPlace].type == 3) {
                     buyBoxContext.drawImage(topPlaceImage, 559, 205, 102, 90);
                     buyBoxContext.fillText("价格 : 400", 575, 350);
@@ -1720,6 +1733,7 @@
                 }
             }
             else {
+                
                 if (curPlayerNum == 1) {
 
                     buyBoxContext.drawImage(player1Head, 582, 220);
@@ -1736,6 +1750,7 @@
                 }
 
                 if (places[curPlace].status == 0) {
+                    buyBoxTextContext.fillText("Soil", 598, 315);
                     if (places[curPlace].type == 3) {
                         buyBoxContext.fillText("价格 : 400", 575, 350);
                         buyBoxContext.fillText("通行费 : 600", 568, 370);
@@ -1750,6 +1765,7 @@
                     }
                 }
                 else {
+                    buyBoxTextContext.fillText("Soil + Plant", 570, 315);
                     if (places[curPlace].type == 3) {
                         buyBoxContext.fillText("价格 : 1000", 575, 350);
                         buyBoxContext.fillText("通行费 : 2000", 568, 370);
@@ -1787,6 +1803,8 @@
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
 
+            buyBoxTextCanvas.style.zIndex = "1";
+
             buttonSound.play();
 
             NextPlayer();
@@ -1804,6 +1822,8 @@
             buyBoxContext.fillRect(0, 0, 1400, 600)
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
+
+            buyBoxTextCanvas.style.zIndex = "1";
 
             buySound.play();
             moneySound.play();
@@ -1890,6 +1910,7 @@
         }
 
         function curPlayerlose() {
+            explosionSound.play();
             players[curPlayerNum].money = 0;
             ShowMetheMoney();
             var m_text = "";
@@ -1910,7 +1931,7 @@
             for (var i = 1; i <= 24; i++) {
                 if (places[i].type != 0) {
                     if (places[i].owner == curPlayerNum) {
-                        switch(places[i].go_where){
+                        switch (places[i].go_where) {
                             case 1:
                                 userContext.fillRect(places[i].x_pos + 65, places[i].y_pos, 51, 47);
                                 userContext.clearRect(places[i].x_pos + 65, places[i].y_pos, 51, 47);
@@ -1949,11 +1970,11 @@
                 }
             }
             setTimeout(function () {
-                for(var i = 0; i <= 24; i++){
-                    boomImgs[i].style.zIndex ="1";
+                for (var i = 0; i <= 24; i++) {
+                    boomImgs[i].style.zIndex = "1";
                 }
                 document.getElementById("bomb").style.zIndex = "1";
-                boomImg.style.zIndex ="1";
+                boomImg.style.zIndex = "1";
                 if (players[curPlayerNum].at < 13) {
                     document.getElementById(players[curPlayerNum].img_id).src = "resource/images/PlayerDieRight.gif"
                 }
@@ -1987,6 +2008,8 @@
         }
 
         function Win() {
+            BGM.pause();
+            winSound.play();
             var winner;
             for (var i = 1; i <= player_pop; i++) {
                 if (players[i].is_dead == 0) {
@@ -2097,6 +2120,7 @@
                 cleanerCanvas.style.zIndex = "1";
                 if (is_refund == 1) {
                     players[curPlayerNum].money += places[index].price;
+                    moneySound.play();
                     purchase(curPlayerNum, 0, 1, places[index].price, 0);
                     ShowMetheMoney();
                     var m = curPlayerNum;
@@ -2109,6 +2133,7 @@
                         players[m].money -= refund_money;
                         players[places[n].owner].money += refund_money;
                         purchase(m, places[n].owner, 0, refund_money, 0);
+                        moneySound.play();
                         ShowMetheMoney();
                     }, 1500);
                     is_refund = 0;
@@ -2158,13 +2183,18 @@
             curPlace = j;
 
             buyBoxCanvas.style.zIndex = "10";
+            buyBoxTextCanvas.style.zIndex = "11";
             buyBoxContext.drawImage(buyBoxImage, 410, 150, 400, 300);
             buyBoxContext.font = "12px Arial";
 
+            buyBoxTextContext.clearRect(0, 0, 1400, 600);
+            buyBoxTextContext.font = "bold 15px Arial";
+            buyBoxTextContext.fillStyle = "rgb(255,201,14)";
+            buyBoxTextContext.fillText("Use Item", 582, 180);
+            buyBoxTextContext.fillText("Shield", 588, 315);
             buyBoxContext.drawImage(shieldImage, 575, 216, 70, 70);
 
             buyBoxContext.fillText("使用它,可以不交通行费", 550, 350);
-            buyBoxContext.fillText("你要用它？", 585, 370);
 
             shieldYesButton.style.zIndex = "15";
             shieldYesButton.style.left = "510px";
@@ -2189,6 +2219,7 @@
             buyBoxContext.fillRect(0, 0, 1400, 600);
             buyBoxContext.clearRect(0, 0, 1400, 600);
             buyBoxCanvas.style.zIndex = "1";
+            buyBoxTextCanvas.style.zIndex = "1";
             var i = curPlayerNum;
             var j = curPlace;
             if (players[i].money > places[j].price) {
@@ -2214,6 +2245,7 @@
             var i = curPlayerNum;
             var j = curPlace;
             buyBoxCanvas.style.zIndex = "1";
+            buyBoxTextCanvas.style.zIndex = "1";
             var purchase_give = i;
             purchase_get = places[j].owner;
             if (places[j].status == 0) {
